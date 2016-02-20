@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import com.couchbase.lite.Document;
 
 import org.wildstang.wildrank.androidv2.interfaces.IMatchDataView;
-import org.wildstang.wildrank.androidv2.models.StackModel;
+import org.wildstang.wildrank.androidv2.models.MatchModel;
 
 import java.util.List;
 import java.util.Map;
@@ -25,26 +25,24 @@ public class MatchDataPercentageStacksDroppedView extends MatchDataView implemen
             return;
         }
 
-        double totalStacks = 0;
-        double droppedStacks = 0;
+        double totalHighGoalMisses = 0;
+        double totalhighGoalCount = 0;
         for (Document document : documents) {
             Map<String, Object> data = (Map<String, Object>) document.getProperty("data");
             if (data == null) {
                 return;
             }
-            List<Map<String, Object>> stacks = (List<Map<String, Object>>) data.get("stacks");
+            List<Map<String, Object>> stacks = (List<Map<String, Object>>) data.get("matches");
             for (Map<String, Object> stack : stacks) {
-                totalStacks++;
-                boolean dropped = (boolean) stack.get(StackModel.STACK_DROPPED_KEY);
-                if (dropped) {
-                    droppedStacks++;
-                }
+                totalhighGoalCount += (int) stack.get(MatchModel.HIGH_GOAL_COUNT_KEY);
+                totalHighGoalMisses += (int) stack.get(MatchModel.HIGH_GOAL_MISSED_KEY);
+
             }
         }
-        if (totalStacks == 0) {
+        if (totalhighGoalCount == 0) {
             setValueText("N/A");
         } else {
-            double percentage = (droppedStacks / totalStacks);
+            double percentage = (totalhighGoalCount / (totalHighGoalMisses + totalhighGoalCount));
             setValueText(formatPercentageAsString(percentage));
         }
     }

@@ -33,7 +33,7 @@ public class MatchDataAverageStacksContributedToView extends MatchDataView imple
         Observable<Double> stacksObservable = Observable.from(documents)
                 .map(doc -> (Map<String, Object>) doc.getProperty("data"))
                 .map(data -> {
-                    List<Map<String, Object>> stacks = (List<Map<String, Object>>) data.get("stacks");
+                    List<Map<String, Object>> stacks = (List<Map<String, Object>>) data.get("matches");
                     return (double) stacks.size();
                 }).subscribeOn(Schedulers.computation());
         MathObservable.averageDouble(stacksObservable)

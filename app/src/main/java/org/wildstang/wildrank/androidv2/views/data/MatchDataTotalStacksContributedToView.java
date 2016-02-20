@@ -33,7 +33,7 @@ public class MatchDataTotalStacksContributedToView extends MatchDataView impleme
 
         Observable stacksObservable = Observable.from(documents)
                 .map(doc -> (Map<String, Object>) doc.getProperty("data"))
-                .map(data -> (List<Map<String, Object>>) data.get("stacks"))
+                .map(data -> (List<Map<String, Object>>) data.get("matches"))
                 .map(stacks -> stacks.size());
 
         MathObservable.sumInteger(stacksObservable)

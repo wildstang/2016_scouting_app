@@ -86,12 +86,12 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/finish_stack"
+        android:id="@+id/done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/linearLayout"
-        android:text="@string/button_finish_stack" />
+        android:text="Done" />
 
 
 </RelativeLayout>
