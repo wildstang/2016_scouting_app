@@ -18,6 +18,8 @@ public class MatchModel {
     public static final String ROCK_WALL_CROSSED_KEY = "rock_wall_crossed";
     public static final String QUAD_RAMP_CROSSED_KEY = "quad_ramp_crossed";
     public static final String SALLYPORT_CROSSED_KEY = "sallyport_crossed";
+    public static final String IS_PLAYING_DEFENSE_KEY =  "is_playing_defense";
+    public static final String NUMBER_SHOTS_BLOCKED_KEY = "blocked_shots_count";
     public static final String ATTEMPTED_SCALE_KEY = "attempted_scale";
     public static final String SCALE_SUCCESSFUL_KEY = "scale_successful";
     public static final String CHALLENGED_KEY = "challenged";
@@ -35,6 +37,8 @@ public class MatchModel {
     public int rock_wall_crossed;
     public int quad_ramp_crossed;
     public int sally_port_crossed;
+    public boolean isPlayingDefense;
+    public int shotsBlocked;
     public boolean attemptedScale;
     public boolean scaleSuccessful;
     public boolean challenged;
@@ -54,6 +58,8 @@ public class MatchModel {
         rock_wall_crossed = 0;
         quad_ramp_crossed = 0;
         sally_port_crossed = 0;
+        isPlayingDefense = false;
+        shotsBlocked = 0;
         attemptedScale = false;
         scaleSuccessful = false;
         challenged = false;
@@ -74,6 +80,8 @@ public class MatchModel {
         match.rock_wall_crossed = (Integer) map.get(ROCK_WALL_CROSSED_KEY);
         match.quad_ramp_crossed = (Integer) map.get(QUAD_RAMP_CROSSED_KEY);
         match.sally_port_crossed = (Integer) map.get(SALLYPORT_CROSSED_KEY);
+        match.isPlayingDefense = (Boolean) map.get(IS_PLAYING_DEFENSE_KEY);
+        match.shotsBlocked = (Integer) map.get(NUMBER_SHOTS_BLOCKED_KEY);
         match.attemptedScale = (Boolean) map.get(ATTEMPTED_SCALE_KEY);
         match.scaleSuccessful = (Boolean) map.get(SCALE_SUCCESSFUL_KEY);
         match.challenged = (Boolean) map.get(CHALLENGED_KEY);
@@ -95,6 +103,8 @@ public class MatchModel {
         map.put(MatchModel.ROCK_WALL_CROSSED_KEY, this.rock_wall_crossed);
         map.put(MatchModel.QUAD_RAMP_CROSSED_KEY, this.quad_ramp_crossed);
         map.put(MatchModel.SALLYPORT_CROSSED_KEY, this.sally_port_crossed);
+        map.put(MatchModel.IS_PLAYING_DEFENSE_KEY, this.isPlayingDefense);
+        map.put(MatchModel.NUMBER_SHOTS_BLOCKED_KEY, this.shotsBlocked);
         map.put(MatchModel.ATTEMPTED_SCALE_KEY, this.attemptedScale);
         map.put(MatchModel.SCALE_SUCCESSFUL_KEY, this.scaleSuccessful);
         map.put(MatchModel.CHALLENGED_KEY, this.challenged);
@@ -124,20 +134,13 @@ public class MatchModel {
         equals &= (comparing.rock_wall_crossed == this.rock_wall_crossed);
         equals &= (comparing.quad_ramp_crossed == this.quad_ramp_crossed);
         equals &= (comparing.sally_port_crossed == this.sally_port_crossed);
+        equals &= (comparing.isPlayingDefense == this.isPlayingDefense);
+        equals &= (comparing.shotsBlocked == this.shotsBlocked);
         equals &= (comparing.attemptedScale == this.attemptedScale);
         equals &= (comparing.scaleSuccessful == this.scaleSuccessful);
         equals &= (comparing.challenged == this.challenged);
         return equals;
     }
 
-    /**
-     * A meaningful stack is defined as one that indicates something actually happened.
-     * <p>
-     * We will define a meaningful stack as one that has totes, a bin, or both.
-     *
-     * @return true if it is meaningful stack, false if otherwise
-     */
-    public boolean isMeaningfulStack() {
-        return true;
-    }
+
 }
