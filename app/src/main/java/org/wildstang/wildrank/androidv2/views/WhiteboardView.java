@@ -9,11 +9,15 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Spinner;
 
 import org.wildstang.wildrank.androidv2.R;
+import org.wildstang.wildrank.androidv2.views.scouting.ScoutingSpinnerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This is a custom view that allows the user to manipulate game objects and robots (magnets) on a
@@ -24,11 +28,18 @@ import java.util.List;
 public class WhiteboardView extends View {
     //all the images
     Bitmap field;
-    Bitmap bin;
-    Bitmap tote;
-    Bitmap coop;
-    Bitmap litter;
+    Bitmap boulder;
+    Bitmap lowBar;
+    Bitmap portcullis;
+    Bitmap moat;
+    Bitmap ramparts;
+    Bitmap drawBridge;
+    Bitmap sallyPort;
+    Bitmap roughTerrain;
+    Bitmap rockWall;
+    Bitmap quadRamp;
     Bitmap robot;
+    Bitmap blank;
 
     //if the whiteboard has been initialized
     boolean run = false;
@@ -46,6 +57,12 @@ public class WhiteboardView extends View {
     //offsets for holding the magnet (basically where the touchpoint is on the magnet)
     int xOffset;
     int yOffset;
+    //used to create reletive positions for the drop down's for defenses
+    int orginButtonX;
+    int orginButtonY;
+    int buttonX;
+    int buttonY;
+    String position;
 
     //the magnet sources on the left
     List<GamePiece> pieces = new ArrayList<>();
@@ -55,6 +72,10 @@ public class WhiteboardView extends View {
     List<Button> buttons = new ArrayList<>();
     //all the points for the pen
     List<List<Point>> points = new ArrayList<>();
+    //dropdowns for defenses
+    List<Button> defensesBtn = new ArrayList<>();
+    //map defenses for drawing
+    List<GamePiece> mapDefenses = new ArrayList<>();
 
     //this is a constructor, you better know what that is
     public WhiteboardView(Context context, AttributeSet attrs) {
@@ -62,11 +83,18 @@ public class WhiteboardView extends View {
 
         //loads all the raw images
         field = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.field);
-        bin = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.greenbin);
-        tote = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.graytote);
-        coop = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.yellowtote);
-        litter = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.noodle);
+        boulder = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.boulder);
+        lowBar = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.lowbar);
+        portcullis = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.portcullis);
+        moat = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.moat);
+        ramparts = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ramparts);
+        drawBridge = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.drawbridge);
+        sallyPort = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.sallyport);
+        roughTerrain = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.roughterrain);
+        rockWall = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.rockwall);
+        quadRamp = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.quadramp);
         robot = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.dozer);
+        blank = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.blank);
     }
 
     //this is run when the view is created
@@ -75,22 +103,22 @@ public class WhiteboardView extends View {
         //setups field and scales
         magScale = ((double) getHeight() / (double) field.getHeight());
         field = Bitmap.createScaledBitmap(field, (int) (magScale * field.getWidth()), getHeight(), false);
-        scale = (((double) getHeight() / 8.0) / (double) tote.getWidth());
+        //scale = (((double) getHeight() / 8.0) / (double) tote.getWidth());
 
         //creates the buttons
         pieces.add(new GamePiece(10, 10,
-                Bitmap.createScaledBitmap(tote, (int) (scale * tote.getWidth()), (int) (scale * tote.getHeight()), false),
-                Bitmap.createScaledBitmap(tote, (int) (magScale * tote.getWidth()), (int) (magScale * tote.getHeight()), false)));
+                Bitmap.createScaledBitmap(boulder, (int) (boulder.getWidth()), (int) (boulder.getHeight()), false),
+                Bitmap.createScaledBitmap(boulder, (int) (boulder.getWidth()), (int) (boulder.getHeight()), false)));
+//        pieces.add(new GamePiece(10, 20 + pieces.get(0).getHeight(),
+//                Bitmap.createScaledBitmap(bin, (int) (scale * bin.getWidth()), (int) (scale * bin.getHeight()), false),
+//                Bitmap.createScaledBitmap(bin, (int) (magScale * bin.getWidth()), (int) (magScale * bin.getHeight()), false)));
+//        pieces.add(new GamePiece(10, 30 + pieces.get(0).getHeight() + pieces.get(1).getHeight(),
+//                Bitmap.createScaledBitmap(coop, (int) (scale * coop.getWidth()), (int) (scale * coop.getHeight()), false),
+//                Bitmap.createScaledBitmap(coop, (int) (magScale * coop.getWidth()), (int) (magScale * coop.getHeight()), false)));
+//        pieces.add(new GamePiece(10, 40 + pieces.get(0).getHeight() + pieces.get(1).getHeight() + pieces.get(2).getHeight(),
+//                Bitmap.createScaledBitmap(litter, (int) (scale * litter.getWidth()), (int) (scale * litter.getHeight()), false),
+//                Bitmap.createScaledBitmap(litter, (int) (magScale * litter.getWidth()), (int) (magScale * litter.getHeight()), false)));
         pieces.add(new GamePiece(10, 20 + pieces.get(0).getHeight(),
-                Bitmap.createScaledBitmap(bin, (int) (scale * bin.getWidth()), (int) (scale * bin.getHeight()), false),
-                Bitmap.createScaledBitmap(bin, (int) (magScale * bin.getWidth()), (int) (magScale * bin.getHeight()), false)));
-        pieces.add(new GamePiece(10, 30 + pieces.get(0).getHeight() + pieces.get(1).getHeight(),
-                Bitmap.createScaledBitmap(coop, (int) (scale * coop.getWidth()), (int) (scale * coop.getHeight()), false),
-                Bitmap.createScaledBitmap(coop, (int) (magScale * coop.getWidth()), (int) (magScale * coop.getHeight()), false)));
-        pieces.add(new GamePiece(10, 40 + pieces.get(0).getHeight() + pieces.get(1).getHeight() + pieces.get(2).getHeight(),
-                Bitmap.createScaledBitmap(litter, (int) (scale * litter.getWidth()), (int) (scale * litter.getHeight()), false),
-                Bitmap.createScaledBitmap(litter, (int) (magScale * litter.getWidth()), (int) (magScale * litter.getHeight()), false)));
-        pieces.add(new GamePiece(10, 50 + pieces.get(0).getHeight() + pieces.get(1).getHeight() + pieces.get(2).getHeight() + pieces.get(3).getHeight(),
                 Bitmap.createScaledBitmap(robot, pieces.get(2).getWidth(), (int) (robot.getHeight() * ((double) pieces.get(2).getWidth() / (double) robot.getWidth())), false),
                 Bitmap.createScaledBitmap(robot, 2 * pieces.get(2).getMagnetWidth(), 2 * (int) (robot.getHeight() * ((double) pieces.get(2).getMagnetWidth() / (double) robot.getWidth())), false)));
 
@@ -99,6 +127,34 @@ public class WhiteboardView extends View {
         int buttonWidth = getWidth() - (width + 20);
         buttons.add(new Button(width + 10, 10, buttonWidth, 2 * buttonWidth / 3 + 10, "Clear!", false));
         buttons.add(new Button(width + 10, 2 * buttonWidth / 3 + 30, buttonWidth, 2 * buttonWidth / 3 + 10, "Pen On/Off", true));
+        buttons.add(new Button(width + 10, 3 * buttonWidth / 3 + 30, buttonWidth, 2 * buttonWidth / 3 + 10, "Clear Menus", false));
+
+        buttons.add(new Button(10, 10, 40, 43, "R1", false));
+        buttons.add(new Button(10, 10, 40, 43, "R2", false));
+        buttons.add(new Button(10, 10, 40, 43, "R3", false));
+        buttons.add(new Button(10, 10, 40, 43, "R4", false));
+        buttons.add(new Button(10, 10, 40, 43, "B1", false));
+        buttons.add(new Button(10, 10, 40, 43, "B2", false));
+        buttons.add(new Button(10, 10, 40, 43, "B3", false));
+        buttons.add(new Button(10, 10, 40, 43, "B4", false));
+
+        //list for the bitmap gamepiece defenses
+        //corrisponds to R1
+        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        //corrisponds to R2
+        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        //corrisponds to R3
+        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        //corrisponds to R4
+        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        //corrisponds to B1
+        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        //corrisponds to B2
+        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        //corrisponds to B3
+        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        //corrisponds to B4
+        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
 
         //listener for touching the screen
         this.setOnTouchListener(new OnTouchListener() {
@@ -160,6 +216,22 @@ public class WhiteboardView extends View {
                                 //if you didn't press a button and its not a toggle depress it
                                 buttons.get(i).pushed = false;
                             }
+                            if (button.name.equals("R1") || button.name.equals("R2") || button.name.equals("R3") || button.name.equals("R4") || button.name.equals("B1") || button.name.equals("B2") || button.name.equals("B3") || button.name.equals("B4")) {
+                                orginButtonX = button.x;
+                                orginButtonY = button.y;
+                                String position = button.name;
+
+                                //creates the "buttons" in the dropdown
+                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY, buttonX, buttonY, "Portcullis", false));
+                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (1 * buttonY), buttonX, buttonY, "Moat", false));
+                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (2 * buttonY), buttonX, buttonY, "Ramparts", false));
+                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (3 * buttonY), buttonX, buttonY, "Draw Bridge", false));
+                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (4 * buttonY), buttonX, buttonY, "Sally Port", false));
+                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (5 * buttonY), buttonX, buttonY, "Rough Terrain", false));
+                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (6 * buttonY), buttonX, buttonY, "Rock Wall", false));
+                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (7 * buttonY), buttonX, buttonY, "Quad Ramp", false));
+                            }
+
                         }
 
                         return true;
@@ -187,6 +259,7 @@ public class WhiteboardView extends View {
                                 if (button.name.equals("Clear!")) {
                                     magnets = new ArrayList<>();
                                     points = new ArrayList<>();
+
                                 }
                             }
 
@@ -194,7 +267,198 @@ public class WhiteboardView extends View {
                             if (!button.toggle) {
                                 buttons.get(i).pushed = false;
                             }
+                            if (button.name.equals("Clear Menus")) {
+                                defensesBtn = new ArrayList<>();
+                            }
                         }
+                        for (int i = 0; i < defensesBtn.size(); i++){
+                            Button button = defensesBtn.get(i);
+                            if(button.name.equals("Quad Ramp")){
+                                switch (position){
+                                    case "R1": mapDefenses.get(0).changeImage(quadRamp);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R2": mapDefenses.get(1).changeImage(quadRamp);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R3": mapDefenses.get(2).changeImage(quadRamp);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R4": mapDefenses.get(3).changeImage(quadRamp);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B1": mapDefenses.get(4).changeImage(quadRamp);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B2": mapDefenses.get(5).changeImage(quadRamp);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B3": mapDefenses.get(6).changeImage(quadRamp);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B4": mapDefenses.get(7).changeImage(quadRamp);
+                                        defensesBtn = new ArrayList<>();
+                                    default: for(i = 0; i < mapDefenses.size(); i++){
+                                        mapDefenses.get(i).changeImage(blank);
+                                    }
+                                        defensesBtn = new ArrayList<>();
+                                }
+                            }else if(button.name.equals("Portcullis")){
+                                switch (position){
+                                    case "R1": mapDefenses.get(0).changeImage(portcullis);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R2": mapDefenses.get(1).changeImage(portcullis);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R3": mapDefenses.get(2).changeImage(portcullis);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R4": mapDefenses.get(3).changeImage(portcullis);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B1": mapDefenses.get(4).changeImage(portcullis);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B2": mapDefenses.get(5).changeImage(portcullis);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B3": mapDefenses.get(6).changeImage(portcullis);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B4": mapDefenses.get(7).changeImage(portcullis);
+                                        defensesBtn = new ArrayList<>();
+                                    default: for(i = 0; i < mapDefenses.size(); i++){
+                                        mapDefenses.get(i).changeImage(blank);
+                                    }
+                                        defensesBtn = new ArrayList<>();
+                                }
+                            }else if(button.name.equals("Moat")){
+                                switch (position){
+                                    case "R1": mapDefenses.get(0).changeImage(moat);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R2": mapDefenses.get(1).changeImage(moat);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R3": mapDefenses.get(2).changeImage(moat);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R4": mapDefenses.get(3).changeImage(moat);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B1": mapDefenses.get(4).changeImage(moat);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B2": mapDefenses.get(5).changeImage(moat);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B3": mapDefenses.get(6).changeImage(moat);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B4": mapDefenses.get(7).changeImage(moat);
+                                        defensesBtn = new ArrayList<>();
+                                    default: for(i = 0; i < mapDefenses.size(); i++){
+                                        mapDefenses.get(i).changeImage(blank);
+                                    }
+                                        defensesBtn = new ArrayList<>();
+                                }
+                            }else if(button.name.equals("Ramparts")){
+                                switch (position){
+                                    case "R1": mapDefenses.get(0).changeImage(ramparts);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R2": mapDefenses.get(1).changeImage(ramparts);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R3": mapDefenses.get(2).changeImage(ramparts);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R4": mapDefenses.get(3).changeImage(ramparts);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B1": mapDefenses.get(4).changeImage(ramparts);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B2": mapDefenses.get(5).changeImage(ramparts);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B3": mapDefenses.get(6).changeImage(ramparts);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B4": mapDefenses.get(7).changeImage(ramparts);
+                                        defensesBtn = new ArrayList<>();
+                                    default: for(i = 0; i < mapDefenses.size(); i++){
+                                        mapDefenses.get(i).changeImage(blank);
+                                    }
+                                        defensesBtn = new ArrayList<>();
+                                }
+                            }else if(button.name.equals("Draw Bridge")){
+                                switch (position){
+                                    case "R1": mapDefenses.get(0).changeImage(drawBridge);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R2": mapDefenses.get(1).changeImage(drawBridge);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R3": mapDefenses.get(2).changeImage(drawBridge);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R4": mapDefenses.get(3).changeImage(drawBridge);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B1": mapDefenses.get(4).changeImage(drawBridge);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B2": mapDefenses.get(5).changeImage(drawBridge);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B3": mapDefenses.get(6).changeImage(drawBridge);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B4": mapDefenses.get(7).changeImage(drawBridge);
+                                        defensesBtn = new ArrayList<>();
+                                    default: for(i = 0; i < mapDefenses.size(); i++){
+                                        mapDefenses.get(i).changeImage(blank);
+                                    }
+                                        defensesBtn = new ArrayList<>();
+                                }
+                            }else if(button.name.equals("Sally Port")){
+                                switch (position){
+                                    case "R1": mapDefenses.get(0).changeImage(sallyPort);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R2": mapDefenses.get(1).changeImage(sallyPort);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R3": mapDefenses.get(2).changeImage(sallyPort);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R4": mapDefenses.get(3).changeImage(sallyPort);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B1": mapDefenses.get(4).changeImage(sallyPort);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B2": mapDefenses.get(5).changeImage(sallyPort);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B3": mapDefenses.get(6).changeImage(sallyPort);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B4": mapDefenses.get(7).changeImage(sallyPort);
+                                        defensesBtn = new ArrayList<>();
+                                    default: for(i = 0; i < mapDefenses.size(); i++){
+                                        mapDefenses.get(i).changeImage(blank);
+                                    }
+                                        defensesBtn = new ArrayList<>();
+                                }
+                            }else if(button.name.equals("Rough Terrain")){
+                                switch (position){
+                                    case "R1": mapDefenses.get(0).changeImage(roughTerrain);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R2": mapDefenses.get(1).changeImage(roughTerrain);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R3": mapDefenses.get(2).changeImage(roughTerrain);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R4": mapDefenses.get(3).changeImage(roughTerrain);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B1": mapDefenses.get(4).changeImage(roughTerrain);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B2": mapDefenses.get(5).changeImage(roughTerrain);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B3": mapDefenses.get(6).changeImage(roughTerrain);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B4": mapDefenses.get(7).changeImage(roughTerrain);
+                                        defensesBtn = new ArrayList<>();
+                                    default: for(i = 0; i < mapDefenses.size(); i++){
+                                        mapDefenses.get(i).changeImage(blank);
+                                    }
+                                        defensesBtn = new ArrayList<>();
+                                }
+                            }else if(button.name.equals("Rock Wall")){
+                                switch (position){
+                                    case "R1": mapDefenses.get(0).changeImage(rockWall);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R2": mapDefenses.get(1).changeImage(rockWall);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R3": mapDefenses.get(2).changeImage(rockWall);
+                                        defensesBtn = new ArrayList<>();
+                                    case "R4": mapDefenses.get(3).changeImage(rockWall);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B1": mapDefenses.get(4).changeImage(rockWall);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B2": mapDefenses.get(5).changeImage(rockWall);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B3": mapDefenses.get(6).changeImage(rockWall);
+                                        defensesBtn = new ArrayList<>();
+                                    case "B4": mapDefenses.get(7).changeImage(rockWall);
+                                        defensesBtn = new ArrayList<>();
+                                    default: for(i = 0; i < mapDefenses.size(); i++){
+                                        mapDefenses.get(i).changeImage(blank);
+                                    }
+                                        defensesBtn = new ArrayList<>();
+                                }
+                            }
+                                                    }
                         //check if you are letting go of a magnet on the left column
                         for (int i = 0; i < magnets.size(); i++) {
                             if (magnets.get(i).x < getWidth() / 6) {
@@ -230,6 +494,11 @@ public class WhiteboardView extends View {
             pieces.get(i).draw(canvas);
         }
 
+        //draws the defenses on the field
+        for (int i = 0; i < mapDefenses.size(); i++){
+            mapDefenses.get(i).draw(canvas);
+        }
+
         //draws all the buttons
         for (int i = 0; i < buttons.size(); i++) {
             buttons.get(i).draw(canvas);
@@ -238,6 +507,11 @@ public class WhiteboardView extends View {
         //draws all the magnets
         for (int i = 0; i < magnets.size(); i++) {
             magnets.get(i).draw(canvas);
+        }
+
+        //draws the dropdowns
+        for (int i = 0; i < defensesBtn.size(); i++){
+            defensesBtn.get(i).draw(canvas);
         }
 
         //draws the pretty drawing you made
@@ -360,8 +634,10 @@ public class WhiteboardView extends View {
             return magnetImage.getHeight();
         }
 
-        public int getMagnetWidth() {
-            return magnetImage.getWidth();
+        public int getMagnetWidth() {return magnetImage.getWidth();}
+
+        public void changeImage(Bitmap newImage){
+            this.image = newImage;
         }
     }
 }
