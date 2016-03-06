@@ -27,6 +27,7 @@ public abstract class ScoutingFragment extends Fragment {
         for (int i = 0; i < childCount; i++) {
             View view = vg.getChildAt(i);
             if (view instanceof IScoutingView) {
+                ((IScoutingView) view).checkHasKey();
                 ((IScoutingView) view).writeContentsToMap(map);
             } else if (view instanceof ViewGroup) {
                 writeContentsToMap(map, (ViewGroup) view);
@@ -39,6 +40,7 @@ public abstract class ScoutingFragment extends Fragment {
         for (int i = 0; i < childCount; i++) {
             View view = viewGroup.getChildAt(i);
             if (view instanceof IScoutingView) {
+                ((IScoutingView) view).checkHasKey();
                 ((IScoutingView) view).writeContentsToMap(map);
             } else if (view instanceof ViewGroup) {
                 writeContentsToMap(map, (ViewGroup) view);

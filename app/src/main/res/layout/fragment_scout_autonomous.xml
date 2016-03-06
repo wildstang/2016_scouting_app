@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:key="auto-drive"
-            app:label="Drives to Auto Zone" />
+            app:label="Reaches Auto Zone" />
 
         <org.wildstang.wildrank.androidv2.views.scouting.ScoutingSpinnerView
             android:id="@+id/totes"

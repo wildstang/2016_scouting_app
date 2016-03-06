@@ -3,47 +3,199 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <org.wildstang.wildrank.androidv2.views.scouting.ScoutingRobotView
-        android:id="@+id/robot_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/other"
-        app:key="match" />
+    android:padding="10dp">
 
     <LinearLayout
-        android:id="@id/other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+                android:id="@+id/high_goal_made"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:label="High Goal Made"
+                app:key="teleop-highGoalMade"/>
+
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+                android:id="@+id/high_goal_missed"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:label="High Goal Missed"
+                app:key="teleop-highGoalMissed"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:label="Low Goal Made"
+                app:key="teleop-lowGoalMade"/>
+
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:label="Low Goal Missed"
+                app:key="teleop-lowGoalMissed"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--Defenses crossed to Courtyard-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true">
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/portcullis_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Portcullis Crossed"
+            app:key="teleop-portcullis"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/moat_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Moat Crossed"
+            app:key="teleop-moat"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/quad_ramp_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Quad Ramp Crossed"
+            app:key="teleop-quadRamp"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/sallyport_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Sallyport crossed"
+            app:key="teleop-sallyport"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/drawbridge_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Drawbridge Crossed"
+            app:key="teleop-drawbridge"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/rough_terrain_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Rough Terrain Crossed"
+            app:key="teleop-roughTerrain"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/rock_wall_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Rock Wall Count"
+            app:key="teleop-rockWall"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/ramparts_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Ramparts Crossed"
+            app:key="teleop-ramparts"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/low_bar"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Low Bar"
+            app:key="teleop-lowBar"/>
+    </LinearLayout>
+
+    <!--Right Side of Screen-->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:orientation="horizontal">
 
-        <!--<org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView-->
-            <!--android:layout_width="300dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:key="stacks_tipped_over"-->
-            <!--app:label="Stacks Tipped Over" />-->
+        <!--For the defense-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <!--<org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView-->
-            <!--android:layout_width="300dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:key="coop"-->
-            <!--app:label="Totes added to coop" />-->
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+                android:id="@+id/defense"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                app:label="Defense?"
+                app:key="teleop-playedDefense"/>
 
-        <!--<org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView-->
-            <!--android:layout_width="350dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:key="coop_height"-->
-            <!--app:label="Pre-existing Co-op Height" />-->
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+                android:id="@+id/shots_blocked"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                app:label="Shots Blocked"
+                app:key="teleop-shotsBlocked"/>
+        </LinearLayout>
 
-        <!--<org.wildstang.wildrank.androidv2.views.scouting.ScoutingSpinnerView-->
-            <!--android:id="@+id/center_bins"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--app:key="teleop-center_bins"-->
-            <!--app:label="Bins from Step"-->
-            <!--app:values="@array/auto_center_bins" />-->
+        <!--For the endgame-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+                android:id="@+id/challenge"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                app:label="Challenged?"
+                app:key="teleop-challenged"/>
+
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+                android:id="@+id/scale_attempted"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                app:label="Attempted Scale?"
+                app:key="teleop-attemptedScale"/>
+
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+                android:id="@+id/scale_successful"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                app:label="Successful Scale?"
+                app:key="teleop-scaleSuccessful"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

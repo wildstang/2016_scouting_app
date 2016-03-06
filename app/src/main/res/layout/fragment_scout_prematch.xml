@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true"
+        android:padding="10dp">
+
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/portcullis"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            app:label="Portcullis"
+            app:key="defense-portcullis"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/quad_ramp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            app:label="Quad Ramp"
+            app:key="defense-quadRamp"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/ramparts"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            app:label="Ramparts"
+            app:key="defense-ramparts"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/sallyport"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            app:label="Sallyport"
+            app:key="defense-sallyport"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/left"
+        android:padding="10dp">
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/drawbridge"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            app:label="Drawbridge"
+            app:key="defense-drawbridge"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/moat"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            app:label="Moat"
+            app:key="defense-Moat"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/rock_wall"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            app:label="Rock Wall"
+            app:key="defense-rockWall"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/rough_terrain"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            app:label="Rough Terrain"
+            app:key="defense-roughTerrain"/>
+        <!--Button goes here-->
+        <Button
+            android:id="@+id/done_Pre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/linearLayout"
+            android:text="Done Selecting Defenses" />
+
+    </LinearLayout>
+</RelativeLayout>

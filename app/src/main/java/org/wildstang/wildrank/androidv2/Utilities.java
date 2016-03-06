@@ -8,6 +8,7 @@ import com.couchbase.lite.Document;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Utilities {
 
@@ -75,6 +76,12 @@ public class Utilities {
                 return Utilities.getBlueTeamsFromMatchDocument(matchDocument)[2].toString();
             default:
                 return "";
+        }
+    }
+
+    public static <K, V> void printMap(Map<K, V> map) {
+        for (Map.Entry entry : map.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }
 }

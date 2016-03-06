@@ -47,39 +47,39 @@ public class StackDataView extends View {
         Collections.sort(matchDocs, new MatchDocumentComparator());
 
         // Default, empty MatchModel to compare to
-        for (Document doc : matchDocs) {
-            Map<String, Object> data = (Map<String, Object>) doc.getProperty("data");
-            List<Map<String, Object>> matchData = (List<Map<String, Object>>) data.get("matches");
-            MatchModel match = new MatchModel();
-                for (int j = 0; j < matchData.size(); j++) {
-                    Log.d("wildrank", "stack for match " + (String) doc.getProperty("match_key") + ": " + matchData.get(j));
-                    match = MatchModel.fromMap(matchData.get(j));
-
-                }
-            matches.add(match);
-        }
+//        for (Document doc : matchDocs) {
+//            Map<String, Object> data = (Map<String, Object>) doc.getProperty("data");
+//            List<Map<String, Object>> matchData = (List<Map<String, Object>>) data.get("matches");
+//            MatchModel match = new MatchModel();
+//                for (int j = 0; j < matchData.size(); j++) {
+//                    Log.d("wildrank", "stack for match " + (String) doc.getProperty("match_key") + ": " + matchData.get(j));
+//                    match = MatchModel.fromMap(matchData.get(j));
+//
+//                }
+//            matches.add(match);
+//        }
         invalidate();
     }
 
     @Override
     public void onDraw(Canvas c) { // code for drawing everything
-        if (matches.isEmpty()) {
-            c.drawText("No data exists for this team.", 100, 100, textPaint);
-        }
-
-
-        int matchNum = 0;
-        int x;
-        for (MatchModel match : matches) {
-            matchNum++;
-            x = getWidth() * matchNum / matches.size();
-
-
-
-            // Draw line to separate matches
-            c.drawLine(x, getHeight() - 50, x * (matchNum + 1) / matchNum, getHeight() - 50, outlinePaint);
-            c.drawLine(getWidth() * matchNum/ matches.size(), 0, getWidth() * matchNum / matches.size(), getHeight(), outlinePaint);
-        }
+//        if (matches.isEmpty()) {
+//            c.drawText("No data exists for this team.", 100, 100, textPaint);
+//        }
+//
+//
+//        int matchNum = 0;
+//        int x;
+//        for (MatchModel match : matches) {
+//            matchNum++;
+//            x = getWidth() * matchNum / matches.size();
+//
+//
+//
+//            // Draw line to separate matches
+//            c.drawLine(x, getHeight() - 50, x * (matchNum + 1) / matchNum, getHeight() - 50, outlinePaint);
+//            c.drawLine(getWidth() * matchNum/ matches.size(), 0, getWidth() * matchNum / matches.size(), getHeight(), outlinePaint);
+//       }
     }
 
     class MatchDocumentComparator implements Comparator<Document> {

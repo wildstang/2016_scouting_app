@@ -9,5 +9,7 @@ public interface IScoutingView {
 
     String getKey();
 
+    void checkHasKey() throws RuntimeException;
+
     boolean isComplete(boolean highlight);
 }

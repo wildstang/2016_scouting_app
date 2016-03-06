@@ -22,6 +22,7 @@ import org.wildstang.wildrank.androidv2.adapters.MatchScoutFragmentPagerAdapter;
 import org.wildstang.wildrank.androidv2.data.DatabaseManager;
 import org.wildstang.wildrank.androidv2.data.MatchResultsModel;
 import org.wildstang.wildrank.androidv2.fragments.ScoutingFragment;
+import org.wildstang.wildrank.androidv2.views.DisableSwipeViewPager;
 import org.wildstang.wildrank.androidv2.views.SlidingTabs;
 
 import java.util.HashMap;
@@ -36,7 +37,7 @@ public class ScoutMatchActivity extends AppCompatActivity {
     public static final String EXTRA_ALLIANCE_COLOR_RED = "red";
     public static final String EXTRA_ALLIANCE_COLOR_BLUE = "blue";
     public String teamKey;
-    private ViewPager pager;
+    private DisableSwipeViewPager pager;
     private MatchScoutFragmentPagerAdapter adapter;
     private SlidingTabs tabs;
     private Toolbar toolbar;
@@ -68,8 +69,9 @@ public class ScoutMatchActivity extends AppCompatActivity {
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
 
-        pager = (ViewPager) findViewById(R.id.view_pager);
+        pager = (DisableSwipeViewPager) findViewById(R.id.view_pager);
         pager.setOffscreenPageLimit(10);
+        pager.setSwipeEnabled(false);
 
         adapter = new MatchScoutFragmentPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
@@ -102,6 +104,9 @@ public class ScoutMatchActivity extends AppCompatActivity {
             fragment.writeContentsToMap(data);
         }
 
+        System.out.println("Match data:");
+        Utilities.printMap(data);
+
         try {
             MatchResultsModel results = new MatchResultsModel(UserHelper.getLoggedInUsersAsArray(this), matchKey, teamKey, data);
             DatabaseManager.getInstance(this).saveMatchResults(results);
@@ -129,6 +134,10 @@ public class ScoutMatchActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setSwipeEnabled(boolean enabled) {
+        pager.setSwipeEnabled(enabled);
     }
 
 }

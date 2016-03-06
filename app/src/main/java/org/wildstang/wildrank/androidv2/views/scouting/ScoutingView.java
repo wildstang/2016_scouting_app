@@ -46,4 +46,10 @@ public abstract class ScoutingView extends RelativeLayout implements IScoutingVi
         return isComplete;
     }
 
+    @Override
+    public void checkHasKey() throws RuntimeException{
+        if(key == null || key.isEmpty()) {
+            throw new RuntimeException(getResources().getResourceName(getId()) + " is missing a key!");
+        }
+    }
 }
