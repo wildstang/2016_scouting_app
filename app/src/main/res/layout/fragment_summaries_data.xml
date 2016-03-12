@@ -22,6 +22,78 @@
             app:explanation="Low Goal Accuracy"
             app:label="Low Goal Accuracy" />
 
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataAverageLowBarCrossesView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the average number of low bar crosses per team per match"
+            app:label="Average Low Bar Crosses"/>
+
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataPercentMatchesDefensePlayed
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the Percentage Of Matches Played Where this Robot Played Defense"
+            app:label="Percent Matches On Defense"/>
+
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataChallengeRateView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the Percentage Of Matches Where This Robot Successfully Challenged"
+            app:label="Percent Of Matches Challenged"/>
+
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataScaleSucessRateView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the Percentage of Attempted Scales That Were Successful"
+            app:label="Scale Success Rate"/>
+
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataAveragePortcullisCrossesView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the average number of times a team crossed this defense per match."
+            app:label="Average Portcullis Crosses"/>
+
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataAverageQuadRampCrossesView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the average number of times a team crossed this defense per match."
+            app:label="Average Quad Ramp Crosses"/>
+
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataAverageMoatCrossesView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the average number of times a team crossed this defense per match."
+            app:label="Average Moat Crosses"/>
+
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataAverageRampartsCrossesView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the average number of times a team crossed this defense per match."
+            app:label="Average Ramparts Crosses"/>
+
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataAverageDrawbridgeCrossesView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the average number of times a team crossed this defense per match."
+            app:label="Average Drawbridge Crosses"/>
+
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataAverageSallyportCrossesView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the average number of times a team crossed this defense per match."
+            app:label="Average Sallyport Crosses"/>
+
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataAverageRockWallCrossesView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the average number of times a team crossed this defense per match."
+            app:label="Average Rock Wall Crosses"/>
+
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataAverageRoughTerrainCrossesView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Records the average number of times a team crossed this defense per match."
+            app:label="Average Rough Terrain Crosses"/>
+
         <!--<org.wildstang.wildrank.androidv2.views.data.MatchDataTotalStacksContributedToView-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="wrap_content"-->
@@ -52,11 +124,11 @@
             <!--app:explanation="Counts the number of stack records that are marked as including a bin that was not dropped."-->
             <!--app:label="Number of Capped Stacks" />-->
 
-        <!--<org.wildstang.wildrank.androidv2.views.data.MatchDataAverageHumanPlayerRatingView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:explanation="Averages all non-zero human player rankings that have been given for this team."-->
-            <!--app:label="Average Human Player Ranking" />-->
+        <org.wildstang.wildrank.androidv2.views.data.MatchDataAverageHumanPlayerRatingView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:explanation="Averages all non-zero human player rankings that have been given for this team."
+            app:label="Average Human Player Ranking" />
 
         <!--<org.wildstang.wildrank.androidv2.views.data.MatchDataAverageStacksContributedToView-->
             <!--android:layout_width="match_parent"-->

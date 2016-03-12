@@ -80,7 +80,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             app:label="Moat"
-            app:key="defense-Moat"/>
+            app:key="defense-moat"/>
 
         <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
             android:id="@+id/rock_wall"

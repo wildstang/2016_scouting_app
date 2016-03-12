@@ -14,58 +14,215 @@
         android:textSize="15sp" />
 
     <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:layout_below="@id/explanation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+                android:id="@+id/high_goal_made"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:label="High Goal Made"
+                app:key="auto-highGoalMade"/>
+
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+                android:id="@+id/high_goal_missed"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:label="High Goal Missed"
+                app:key="auto-highGoalMissed"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:label="Low Goal Made"
+                app:key="auto-lowGoalMade"/>
+
+            <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:label="Low Goal Missed"
+                app:key="auto-lowGoalMissed"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/auto_defenses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true">
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/auto_portcullis_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Portcullis Crossed"
+            app:key="auto-portcullis"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/auto_moat_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Moat Crossed"
+            app:key="auto-moat"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/auto_quad_ramp_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Quad Ramp Crossed"
+            app:key="auto-quadRamp"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/auto_sallyport_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Sallyport crossed"
+            app:key="auto-sallyport"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/auto_drawbridge_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Drawbridge Crossed"
+            app:key="auto-drawbridge"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/auto_rough_terrain_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Rough Terrain Crossed"
+            app:key="auto-roughTerrain"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/auto_rock_wall_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Rock Wall Count"
+            app:key="auto-rockWall"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/auto_ramparts_count"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Ramparts Crossed"
+            app:key="auto-ramparts"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCounterView
+            android:id="@+id/auto_low_bar"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Low Bar"
+            app:key="auto-lowBar"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/reached"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/auto_defenses"
         android:orientation="vertical">
 
         <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
-            android:id="@+id/drive"
-            android:layout_width="match_parent"
+            android:id="@+id/auto_portcullis_reach"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            app:key="auto-drive"
-            app:label="Reaches Auto Zone" />
+            android:layout_marginTop="30dp"
+            app:label="Portcullis Reached"
+            app:key="auto-portcullis_reach"/>
 
-        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingSpinnerView
-            android:id="@+id/totes"
-            android:layout_width="match_parent"
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/auto_moat_reach"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            app:key="auto-totes"
-            app:label="Totes Moved"
-            app:values="@array/auto_totes" />
+            android:layout_marginTop="30dp"
+            app:label="Moat Reached"
+            app:key="auto-moat_reach"/>
 
-        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingSpinnerView
-            android:id="@+id/stacked"
-            android:layout_width="match_parent"
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/auto_quad_ramp_reach"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/drive"
-            app:key="auto-totes_stacked"
-            app:label="Totes Stacked"
-            app:values="@array/auto_totes" />
+            android:layout_marginTop="30dp"
+            app:label="Quad Ramp Reached"
+            app:key="auto-quadRamp_reach"/>
 
-        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingSpinnerView
-            android:id="@+id/bins"
-            android:layout_width="match_parent"
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/auto_sallyport_reach"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            app:key="auto-bins"
-            app:label="Bins Moved"
-            app:values="@array/auto_bins" />
+            android:layout_marginTop="30dp"
+            app:label="Sallyport Reached"
+            app:key="auto-sallyport_reach"/>
 
-        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingNumberView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/auto_drawbridge_reach"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            app:key="auto-time"
-            app:label="Approx. Time Taken" />
+            android:layout_marginTop="30dp"
+            app:label="Drawbridge Reached"
+            app:key="auto-drawbridge_reach"/>
 
-        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingSpinnerView
-            android:id="@+id/center_bins"
-            android:layout_width="match_parent"
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/auto_rough_terrain_reach"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            app:key="auto-center_bins"
-            app:label="Bins from Step"
-            app:values="@array/auto_center_bins" />
+            android:layout_marginTop="30dp"
+            app:label="Rough Terrain Reached"
+            app:key="auto-roughTerrain_reach"/>
 
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/auto_rock_wall_reach"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Rock Wall Reached"
+            app:key="auto-rockWall_reach"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/auto_ramparts_reach"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Ramparts Reached"
+            app:key="auto-ramparts_reach"/>
+
+        <org.wildstang.wildrank.androidv2.views.scouting.ScoutingCheckboxView
+            android:id="@+id/auto_low_bar_reach"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:label="Low Bar Reached"
+            app:key="auto-lowBar_reach"/>
     </LinearLayout>
 
 </RelativeLayout>

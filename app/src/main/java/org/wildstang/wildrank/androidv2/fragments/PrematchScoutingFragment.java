@@ -90,6 +90,7 @@ public class PrematchScoutingFragment extends ScoutingFragment implements View.O
                 if (activity instanceof ScoutMatchActivity) {
                     ((ScoutMatchActivity) activity).setSwipeEnabled(true);
                 }
+                //System.out.println(defenses.get(0));
                 EventBus.getDefault().post(new ActiveDefensesChangedEvent(defenses));
             } else {
                 Activity activity = getActivity();
