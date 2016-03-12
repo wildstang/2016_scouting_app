@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class StackDataView extends View {
-    List<MatchModel> matches = new ArrayList<>();
-    int stackCount = 0;
+    List<Map<String, Object>> matchData;
 
     Paint textPaint, boulderPaint, scaledPaint, notScoredPaint, outlinePaint;
 
@@ -35,29 +34,22 @@ public class StackDataView extends View {
         outlinePaint.setStyle(Paint.Style.STROKE);
         notScoredPaint = new Paint();
         notScoredPaint.setColor(Color.argb(200, 255, 0, 0)); // Translucent blue
+
+
     }
 
     public void acceptNewTeamData(List<Document> matchDocs) {
         if (matchDocs == null || matchDocs.isEmpty()) {
-            matches = new ArrayList<>();
             return;
         }
-        matches = new ArrayList<>();
         // Sorts the matches by match number
         Collections.sort(matchDocs, new MatchDocumentComparator());
 
         // Default, empty MatchModel to compare to
-//        for (Document doc : matchDocs) {
-//            Map<String, Object> data = (Map<String, Object>) doc.getProperty("data");
-//            List<Map<String, Object>> matchData = (List<Map<String, Object>>) data.get("matches");
-//            MatchModel match = new MatchModel();
-//                for (int j = 0; j < matchData.size(); j++) {
-//                    Log.d("wildrank", "stack for match " + (String) doc.getProperty("match_key") + ": " + matchData.get(j));
-//                    match = MatchModel.fromMap(matchData.get(j));
-//
-//                }
-//            matches.add(match);
-//        }
+        for (Document doc : matchDocs) {
+            Map<String, Object> data = (Map<String, Object>) doc.getProperty("data");
+            matchData = (List<Map<String, Object>>) data.get("matches");
+        }
         invalidate();
     }
 
