@@ -106,9 +106,12 @@ public class WhiteboardView extends View {
         //scale = (((double) getHeight() / 8.0) / (double) tote.getWidth());
 
         //creates the buttons
-        
-        pieces.add(new GamePiece(10, 10, Bitmap.createScaledBitmap(boulder, (int) (boulder.getWidth()), (int) (boulder.getHeight()), false), Bitmap.createScaledBitmap(boulder, (int) (boulder.getWidth()), (int) (boulder.getHeight()), false)));
-        pieces.add(new GamePiece(10, 10, Bitmap.createScaledBitmap(robot, pieces.get(2).getWidth(), (int) (robot.getHeight() * ((double) pieces.get(2).getWidth() / (double) robot.getWidth())), false), Bitmap.createScaledBitmap(robot, 2 * pieces.get(2).getMagnetWidth(), 2 * (int) (robot.getHeight() * ((double) pieces.get(2).getMagnetWidth() / (double) robot.getWidth())), false)));
+        pieces.add(new GamePiece(10, 10,
+                Bitmap.createScaledBitmap(boulder, (int) (boulder.getWidth()), (int) (boulder.getHeight()), false),
+                Bitmap.createScaledBitmap(boulder, (int) (boulder.getWidth()), (int) (boulder.getHeight()), false)));
+        pieces.add(new GamePiece(10, 20 + pieces.get(0).getHeight(),
+                Bitmap.createScaledBitmap(robot, robot.getWidth(), (int) (robot.getHeight() * ((double) robot.getWidth() / (double) robot.getWidth())), false),
+                Bitmap.createScaledBitmap(robot, robot.getWidth(), 2 * (int) (robot.getHeight() * ((double) robot.getWidth() / (double) robot.getWidth())), false)));
 
         //creates the side buttons for clearing and using the pen
         int width = ((getWidth() / 6) + field.getWidth());
