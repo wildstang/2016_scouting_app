@@ -32,7 +32,7 @@ public class MatchDataHighGoalAccuracy extends MatchDataView implements IMatchDa
             if (data == null) {
                 return;
             }
-            highGoalMissed = (int) data.get("teleop-highGoalMissed");
+            highGoalMissed += (int) data.get("teleop-highGoalMissed");
             highGoalMade += (int) data.get("teleop-highGoalMade");;
         }
         if (highGoalMade == 0 && highGoalMissed == 0) {
