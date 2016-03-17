@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Created by Janine on 3/13/2016.
  */
-public class MatchStrategyFragmentMain extends Fragment implements View.OnClickListener {
+public class MatchStrategyMainFragment extends Fragment implements View.OnClickListener {
     private ListView list;
 
     private Button enterStrategy;
@@ -47,7 +47,7 @@ public class MatchStrategyFragmentMain extends Fragment implements View.OnClickL
 
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
-    public MatchStrategyFragmentMain() {
+    public MatchStrategyMainFragment() {
         // Required empty public constructor
     }
 
@@ -60,7 +60,7 @@ public class MatchStrategyFragmentMain extends Fragment implements View.OnClickL
                 return;
             }
             if (key.equals("assignedTeam")) {
-                if (MatchStrategyFragmentMain.this.isAdded()) {
+                if (MatchStrategyMainFragment.this.isAdded()) {
                     // Requery the list to update which matches are scouted or not
                     try {
                         Log.d("wildrank", "Requerying match list!");
@@ -75,7 +75,7 @@ public class MatchStrategyFragmentMain extends Fragment implements View.OnClickL
                     if (selectedMatchKey != null) {
                         try {
                             Log.d("wildrank", "Requerying match details!");
-                            onMatchSelected(DatabaseManager.getInstance(MatchStrategyFragmentMain.this.getActivity()).getMatchFromKey(selectedMatchKey));
+                            onMatchSelected(DatabaseManager.getInstance(MatchStrategyMainFragment.this.getActivity()).getMatchFromKey(selectedMatchKey));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -157,7 +157,6 @@ public class MatchStrategyFragmentMain extends Fragment implements View.OnClickL
         selectedTeams = Arrays.copyOf(objects, objects.length, String[].class);
 
         enterStrategy.setEnabled(true);
-
     }
 
     @Override

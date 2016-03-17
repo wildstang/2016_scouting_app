@@ -32,6 +32,13 @@
         <item>4</item>
     </string-array>
 
+    <string-array name="auto_shot">
+        <item>High</item>
+        <item>Low</item>
+        <item>Both</item>
+        <item>None</item>
+    </string-array>
+
     <string-array name="rankings">
         <item>0</item>
         <item>1</item>
@@ -61,11 +68,21 @@
     </string-array>
 
     <string-array name="drives">
-        <item>Tank</item>
+        <item>Plaction Tank</item>
         <item>Mechanum</item>
         <item>H-Drive/Slide</item>
+        <item>Pneumatic Tank</item>
         <item>Swerve</item>
-        <item>Holonomic</item>
+        <item>Tank Treads</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="wheels">
+        <item>4 in</item>
+        <item>6 in</item>
+        <item>8 in</item>
+        <item>Other</item>
+        <item>N/A</item>
     </string-array>
 
     <string-array name="tote">

@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:explanation="Records the Percentage Of Matches Where This Robot Successfully Challenged"
-            app:label="Percent Of Matches Challenged"/>
+            app:label="Percent Of Matches Challenged Or Scaled"/>
 
         <org.wildstang.wildrank.androidv2.views.data.MatchDataScaleSucessRateView
             android:layout_width="match_parent"

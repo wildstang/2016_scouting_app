@@ -2,42 +2,35 @@ package org.wildstang.wildrank.androidv2.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Document;
 
-import org.wildstang.wildrank.androidv2.NoteBox;
 import org.wildstang.wildrank.androidv2.R;
-import org.wildstang.wildrank.androidv2.TeamStrategyBox;
 import org.wildstang.wildrank.androidv2.Utilities;
-import org.wildstang.wildrank.androidv2.adapters.TeamSummariesFragmentPagerAdapter;
 import org.wildstang.wildrank.androidv2.data.DatabaseManager;
+import org.wildstang.wildrank.androidv2.models.TeamDocumentsModel;
+import org.wildstang.wildrank.androidv2.views.TeamStrategyView;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Created by Janine on 3/13/2016.
- */
 public class MatchStrategyFragment extends Fragment {
-    public List<TeamStrategyBox> boxes = new ArrayList<>();
-    String[] teams;
-    View section;
 
-    public static MatchStrategyFragment newInstance(String[] teams) {
+    private static final String MATCH_KEY = "match_key";
+
+    public List<TeamStrategyView> mStrategyViews = new ArrayList<>();
+    private String mMatchKey;
+    //String[] teams;
+
+    public static MatchStrategyFragment newInstance(String matchKey) {
         MatchStrategyFragment f = new MatchStrategyFragment();
         Bundle b = new Bundle();
-        b.putStringArray("teams", teams);
+        b.putString(MATCH_KEY, matchKey);
         f.setArguments(b);
         return f;
     }
@@ -46,35 +39,38 @@ public class MatchStrategyFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getActivity() != null) {
-            teams = getArguments().getStringArray("teams");
+            mMatchKey = getArguments().getString(MATCH_KEY);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_match_strategy, container, false);
-        boxes.add(new TeamStrategyBox(view.findViewById(R.id.one), Integer.toString(Utilities.teamNumberFromTeamKey(teams[0]))));
-        boxes.add(new TeamStrategyBox(view.findViewById(R.id.two), Integer.toString(Utilities.teamNumberFromTeamKey(teams[1]))));
-        boxes.add(new TeamStrategyBox(view.findViewById(R.id.three), Integer.toString(Utilities.teamNumberFromTeamKey(teams[2]))));
-        boxes.add(new TeamStrategyBox(view.findViewById(R.id.four), Integer.toString(Utilities.teamNumberFromTeamKey(teams[3]))));
-        boxes.add(new TeamStrategyBox(view.findViewById(R.id.five), Integer.toString(Utilities.teamNumberFromTeamKey(teams[4]))));
-        boxes.add(new TeamStrategyBox(view.findViewById(R.id.six), Integer.toString(Utilities.teamNumberFromTeamKey(teams[5]))));
 
-        loadInfoForTeam(teams[3]);
+        mStrategyViews.add((TeamStrategyView) view.findViewById(R.id.one));
+        mStrategyViews.add((TeamStrategyView) view.findViewById(R.id.two));
+        mStrategyViews.add((TeamStrategyView) view.findViewById(R.id.three));
+        mStrategyViews.add((TeamStrategyView) view.findViewById(R.id.four));
+        mStrategyViews.add((TeamStrategyView) view.findViewById(R.id.five));
+        mStrategyViews.add((TeamStrategyView) view.findViewById(R.id.six));
+
         return view;
     }
 
-    private void loadInfoForTeam(String teamKey) {
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        // Load the data for this match
         try {
-            DatabaseManager db = DatabaseManager.getInstance(getContext());
-            Document teamDocument = db.getTeamFromKey(teamKey);
-            Document pitDocument = db.getInternalDatabase().getExistingDocument("pit:" + teamKey);
-            List<Document> matchDocuments = db.getMatchResultsForTeam(teamKey);
-            boxes.get(0).setHighGoalAccuracy(((Integer)(((Map<String, Object>) matchDocuments.get(0).getProperty("data")).get("teleop-highGoalMade"))).toString(), getContext());
-        } catch (CouchbaseLiteException | IOException e) {
+            Document matchDoc = DatabaseManager.getInstance(getContext()).getMatchFromKey(mMatchKey);
+            Object[] teamObjects = Utilities.getTeamsFromMatchDocument(matchDoc);
+            String[] teamKeys = Arrays.copyOf(teamObjects, teamObjects.length, String[].class);
+
+            for (int i = 0; i < mStrategyViews.size(); i++) {
+                mStrategyViews.get(i).populateFromTeamDocuments(TeamDocumentsModel.from(getContext(), teamKeys[i]));
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            //Toast.makeText(this, "Error loading data for team. Check LogCat.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Error loading match document", Toast.LENGTH_LONG).show();
         }
     }
-
 }

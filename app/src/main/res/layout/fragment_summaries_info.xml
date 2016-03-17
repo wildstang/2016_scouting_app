@@ -84,13 +84,6 @@
                         android:textSize="20sp"
                         app:text="&lt;b>Dimensions (l*w*h):&lt;/b> {{length}} x {{width}} x {{height}}" />
 
-                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        app:falseString="no"
-                        app:text="&lt;b>Bumpers:&lt;/b> {{bumpers}}"
-                        app:trueString="yes" />
 
                     <org.wildstang.wildrank.androidv2.views.TemplatedTextView
                         android:layout_width="wrap_content"
@@ -103,7 +96,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
                         app:falseString="no"
-                        app:text="&lt;b>Plays in landfill:&lt;/b> {{landfill}}"
+                        app:text="&lt;b>Wheel Size:&lt;/b> {{wheelsize}}"
                         app:trueString="yes" />
 
                     <org.wildstang.wildrank.androidv2.views.TemplatedTextView
@@ -111,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
                         app:falseString="no"
-                        app:text="&lt;b>Plays at player station:&lt;/b> {{player_station}}"
+                        app:text="&lt;b>Low Bar Capable:&lt;/b> {{lowBarCapable}}"
                         app:trueString="yes" />
 
                     <org.wildstang.wildrank.androidv2.views.TemplatedTextView
@@ -119,7 +112,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
                         app:falseString="no"
-                        app:text="&lt;b>Plays at step:&lt;/b> {{step}}"
+                        app:text="&lt;b>Crosses Category A Defenses:&lt;/b> {{categoryADef}}"
                         app:trueString="yes" />
 
                     <org.wildstang.wildrank.androidv2.views.TemplatedTextView
@@ -127,7 +120,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
                         app:falseString="no"
-                        app:text="&lt;b>Manipulates totes:&lt;/b> {{totes}}"
+                        app:text="&lt;b>Crosses Category B Defenses:&lt;/b> {{categoryBDef}}"
                         app:trueString="yes" />
 
                     <org.wildstang.wildrank.androidv2.views.TemplatedTextView
@@ -135,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
                         app:falseString="no"
-                        app:text="&lt;b>Manipulates bins:&lt;/b> {{bins}}"
+                        app:text="&lt;b>Crosses Category C Defenses:&lt;/b> {{categoryCDef}}"
                         app:trueString="yes" />
 
                     <org.wildstang.wildrank.androidv2.views.TemplatedTextView
@@ -143,58 +136,75 @@
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
                         app:falseString="no"
-                        app:text="&lt;b>Manipulates litter:&lt;/b> {{litter}}"
+                        app:text="&lt;b>Crosses Category D Defenses:&lt;/b> {{categoryDDef}}"
                         app:trueString="yes" />
-
-                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        app:text="&lt;b>Playing location:&lt;/b> {{pit-playing_location}}" />
-
-                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        app:text="&lt;b>Max totes stack:&lt;/b> {{max_totes_stack}}" />
-
-                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        app:text="&lt;b>Max cap with bin:&lt;/b> {{max_cap}}" />
-
-                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        app:text="&lt;b>Stacks per match:&lt;/b> {{stacks_per_match}}" />
-
-                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        app:text="&lt;b>Auto bins:&lt;/b> {{auto_bins}}" />
-
-                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        app:text="&lt;b>Auto totes:&lt;/b> {{auto_totes}}" />
-
-                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        app:text="&lt;b>Auto bins from step:&lt;/b> {{auto_step}}" />
 
                     <org.wildstang.wildrank.androidv2.views.TemplatedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
                         app:falseString="no"
-                        app:text="&lt;b>Drives during auto:&lt;/b> {{auto_drives}}"
-                        app:trueString="yes" />
+                        app:text="&lt;b>Shoots High:&lt;/b> {{highGoalCapable}}"
+                        app:trueString="yes"/>
+
+                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        app:falseString="no"
+                        app:text="&lt;b>Shoots Low:&lt;/b> {{lowGoalCapable}}"
+                        app:trueString="yes"/>
+
+                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        app:falseString="no"
+                        app:text="&lt;b>Plays Defense:&lt;/b> {{playsDefense}}"
+                        app:trueString="yes"/>
+
+                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        app:falseString="no"
+                        app:text="&lt;b>Has Camera Assistance:&lt;/b> {{camera_assist}}"
+                        app:trueString="yes"/>
+
+                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        app:text="&lt;b>Cycles per match:&lt;/b> {{cycles_per_match}}" />
+
+                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        app:falseString="no"
+                        app:text="&lt;b>Reach Auto:&lt;/b> {{reaches}}"
+                        app:trueString="yes"/>
+
+                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        app:falseString="no"
+                        app:text="&lt;b>Cross Defense Auto:&lt;/b> {{crosses}}"
+                        app:trueString="yes"/>
+
+                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        app:text="&lt;b>Auto Capable Defenses:&lt;/b> {{crossableDefenses}}" />
+
+                    <org.wildstang.wildrank.androidv2.views.TemplatedTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        app:falseString="no"
+                        app:text="&lt;b>Auto Shot:&lt;/b> {{shoots}}"/>
 
                     <TextView
                         android:layout_width="wrap_content"

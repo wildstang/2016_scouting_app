@@ -8,7 +8,8 @@
         android:id="@+id/top"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
         <org.wildstang.wildrank.androidv2.views.TeamStrategyView
             android:id="@+id/one"
@@ -49,7 +50,8 @@
         android:id="@+id/bottom"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
         <org.wildstang.wildrank.androidv2.views.TeamStrategyView
             android:id="@+id/four"
