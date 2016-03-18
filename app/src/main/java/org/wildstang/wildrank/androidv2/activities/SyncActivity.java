@@ -156,20 +156,19 @@ public class SyncActivity extends AppCompatActivity {
                             }
                         }
 
-                        // Create a new set of properties with these notes based on the existing internal properties
-                        Map<String, Object> newProps = new HashMap<>(doc.getProperties());
-                        newProps.remove("notes");
-                        newProps.put("notes", newNotes);
-
                         // Save the documents both internally and externally
                         Document document = internalDatabase.getDocument(docId);
+                        Map<String, Object> internalProps = new HashMap<>(doc.getProperties());
+                        internalProps.remove("notes");
+                        internalProps.put("notes", newNotes);
                         UnsavedRevision revision = document.createRevision();
-                        revision.setProperties(newProps);
+                        revision.setProperties(internalProps);
                         revision.save();
 
                         document = externalDatabase.getDocument(docId);
+                        internalProps = internalDatabase.getDocument(docId).getProperties();
                         revision = document.createRevision();
-                        revision.setProperties(newProps);
+                        revision.setProperties(internalProps);
                         revision.save();
                     }
                     continue;
