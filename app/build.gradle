@@ -54,6 +54,4 @@ dependencies {
     compile 'com.couchbase.lite:couchbase-lite-android:1.1.0'
     compile 'com.google.code.gson:gson:2.3'
     compile 'de.greenrobot:eventbus:2.4.0'
-
-
 }
