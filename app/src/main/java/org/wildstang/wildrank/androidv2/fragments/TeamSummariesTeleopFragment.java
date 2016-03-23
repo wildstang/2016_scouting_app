@@ -9,17 +9,17 @@ import android.view.ViewGroup;
 import com.couchbase.lite.Document;
 
 import org.wildstang.wildrank.androidv2.R;
-import org.wildstang.wildrank.androidv2.views.data.StackDataView;
+import org.wildstang.wildrank.androidv2.views.data.TeleopDataView;
 
 import java.util.List;
 
-public class TeamSummariesStackFragment extends TeamSummariesFragment {
-    StackDataView view;
+public class TeamSummariesTeleopFragment extends TeamSummariesFragment {
+    TeleopDataView view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_stack, container, false);
-        view = (StackDataView) v.findViewById(R.id.stackview);
+        View v = inflater.inflate(R.layout.fragment_teleop, container, false);
+        view = (TeleopDataView) v.findViewById(R.id.teleopview);
         v.findViewById(R.id.stack_view_help).setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Help");

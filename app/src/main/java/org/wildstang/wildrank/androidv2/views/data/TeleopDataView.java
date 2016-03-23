@@ -19,13 +19,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-public class StackDataView extends View {
+public class TeleopDataView extends View {
     private List<Document> matchDocs;
 
     Paint textPaint, boulderPaint, scaledPaint, scoredPaint, notScoredPaint, outlinePaint, smallTextPaint, idlePaint;
 
 
-    public StackDataView(Context context, AttributeSet attrs) {
+    public TeleopDataView(Context context, AttributeSet attrs) {
         super(context, attrs);
         textPaint = new Paint();
         textPaint.setTextSize(25);
@@ -72,37 +72,66 @@ public class StackDataView extends View {
                 Map<String, Object> data = (Map<String, Object>) doc.getProperty("data");
                 matchNum++;
                 x = (getWidth() - 25) * matchNum / matchDocs.size();
+                if (matchDocs.size() > 9) {
+                    c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 50, 25, boulderPaint);
+                    c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 50, 25, outlinePaint);
+                    Integer highGoalMade = (Integer) data.get("teleop-highGoalMade");
+                    Integer highGoalMissed = (Integer) data.get("teleop-highGoalMissed");
+                    if (highGoalMade == 0 && highGoalMissed == 0) {
+                        c.drawText("N/A", (float) scaledAt(.5, x, matchNum) + 10, 56, textPaint);
+                    } else {
+                        double angle = (highGoalMissed * 360) / (highGoalMade + highGoalMissed);
+                        c.drawArc(new RectF((float) scaledAt(.5, x, matchNum), 25, (float) scaledAt(.5, x, matchNum) + 50, 75), (float) (angle / 2), (float) (angle * -1), true, notScoredPaint);
+                        c.drawArc(new RectF((float) scaledAt(.5, x, matchNum), 25, (float) scaledAt(.5, x, matchNum) + 50, 75), (float) (angle / 2), (float) (360 - (angle)), true, scoredPaint);
+                        c.drawText(highGoalMade.toString(), (float) scaledAt(.5, x, matchNum) - 12, 57, smallTextPaint);
+                        c.drawText(highGoalMissed.toString(), (float) scaledAt(.5, x, matchNum) + 52, 57, smallTextPaint);
+                    }
 
-                c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 50, 30, boulderPaint);
-                c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 50, 30, outlinePaint);
-                Integer highGoalMade = (Integer) data.get("teleop-highGoalMade");
-                Integer highGoalMissed = (Integer) data.get("teleop-highGoalMissed");
-                if (highGoalMade == 0 && highGoalMissed == 0) {
-                    c.drawText("N/A", (float) scaledAt(.5, x, matchNum) + 5, 60, textPaint);
+                    c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 150, 25, boulderPaint);
+                    c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 150, 25, outlinePaint);
+                    Integer lowGoalMade = (Integer) data.get("teleop-lowGoalMade");
+                    Integer lowGoalMissed = (Integer) data.get("teleop-lowGoalMissed");
+                    if (lowGoalMade == 0 && lowGoalMissed == 0) {
+                        c.drawText("N/A", (float) scaledAt(.5, x, matchNum) + 10, 156, smallTextPaint);
+                    } else {
+                        double angle2 = (lowGoalMissed * 360) / (lowGoalMade + lowGoalMissed);
+                        c.drawArc(new RectF((float) scaledAt(.5, x, matchNum), 125, (float) scaledAt(.5, x, matchNum) + 50, 175), (float) (angle2 / 2), (float) (angle2 * -1), true, notScoredPaint);
+                        c.drawArc(new RectF((float) scaledAt(.5, x, matchNum), 125, (float) scaledAt(.5, x, matchNum) + 50, 175), (float) (angle2 / 2), (float) (360 - (angle2)), true, scoredPaint);
+                        c.drawText(lowGoalMade.toString(), (float) scaledAt(.5, x, matchNum) - 12, 157, smallTextPaint);
+                        c.drawText(lowGoalMissed.toString(), (float) scaledAt(.5, x, matchNum) + 52, 157, smallTextPaint);
+                    }
                 } else {
-                    double angle = (highGoalMissed * 360) / (highGoalMade + highGoalMissed);
-                    c.drawArc(new RectF((float) scaledAt(.5, x, matchNum) - 5, 20, (float) scaledAt(.5, x, matchNum) + 55, 80), (float) (angle / 2), (float) (angle * -1), true, notScoredPaint);
-                    c.drawArc(new RectF((float) scaledAt(.5, x, matchNum) - 5, 20, (float) scaledAt(.5, x, matchNum) + 55, 80), (float) (angle / 2), (float) (360 - (angle)), true, scoredPaint);
-                    c.drawText(highGoalMade.toString(), (float) scaledAt(.5, x, matchNum) - 21, 60, textPaint);
-                    c.drawText(highGoalMissed.toString(), (float) scaledAt(.5, x, matchNum) + 58, 60, textPaint);
-                }
+                    c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 50, 30, boulderPaint);
+                    c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 50, 30, outlinePaint);
+                    Integer highGoalMade = (Integer) data.get("teleop-highGoalMade");
+                    Integer highGoalMissed = (Integer) data.get("teleop-highGoalMissed");
+                    if (highGoalMade == 0 && highGoalMissed == 0) {
+                        c.drawText("N/A", (float) scaledAt(.5, x, matchNum) + 5, 60, textPaint);
+                    } else {
+                        double angle = (highGoalMissed * 360) / (highGoalMade + highGoalMissed);
+                        c.drawArc(new RectF((float) scaledAt(.5, x, matchNum) - 5, 20, (float) scaledAt(.5, x, matchNum) + 55, 80), (float) (angle / 2), (float) (angle * -1), true, notScoredPaint);
+                        c.drawArc(new RectF((float) scaledAt(.5, x, matchNum) - 5, 20, (float) scaledAt(.5, x, matchNum) + 55, 80), (float) (angle / 2), (float) (360 - (angle)), true, scoredPaint);
+                        c.drawText(highGoalMade.toString(), (float) scaledAt(.5, x, matchNum) - 21, 60, textPaint);
+                        c.drawText(highGoalMissed.toString(), (float) scaledAt(.5, x, matchNum) + 58, 60, textPaint);
+                    }
 
-                c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 150, 30, boulderPaint);
-                c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 150, 30, outlinePaint);
-                Integer lowGoalMade = (Integer) data.get("teleop-lowGoalMade");
-                Integer lowGoalMissed = (Integer) data.get("teleop-lowGoalMissed");
-                if (lowGoalMade == 0 && lowGoalMissed == 0) {
-                    c.drawText("N/A", (float) scaledAt(.5, x, matchNum) + 5, 160, textPaint);
-                } else {
-                    double angle2 = (lowGoalMissed * 360) / (lowGoalMade + lowGoalMissed);
-                    c.drawArc(new RectF((float) scaledAt(.5, x, matchNum) - 5, 120, (float) scaledAt(.5, x, matchNum) + 55, 180), (float) (angle2 / 2), (float) (angle2 * -1), true, notScoredPaint);
-                    c.drawArc(new RectF((float) scaledAt(.5, x, matchNum) - 5, 120, (float) scaledAt(.5, x, matchNum) + 55, 180), (float) (angle2 / 2), (float) (360 - (angle2)), true, scoredPaint);
-                    c.drawText(lowGoalMade.toString(), (float) scaledAt(.5, x, matchNum) - 21, 160, textPaint);
-                    c.drawText(lowGoalMissed.toString(), (float) scaledAt(.5, x, matchNum) + 58, 160, textPaint);
+                    c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 150, 30, boulderPaint);
+                    c.drawCircle((float) scaledAt(.5, x, matchNum) + 25, 150, 30, outlinePaint);
+                    Integer lowGoalMade = (Integer) data.get("teleop-lowGoalMade");
+                    Integer lowGoalMissed = (Integer) data.get("teleop-lowGoalMissed");
+                    if (lowGoalMade == 0 && lowGoalMissed == 0) {
+                        c.drawText("N/A", (float) scaledAt(.5, x, matchNum) + 5, 160, textPaint);
+                    } else {
+                        double angle2 = (lowGoalMissed * 360) / (lowGoalMade + lowGoalMissed);
+                        c.drawArc(new RectF((float) scaledAt(.5, x, matchNum) - 5, 120, (float) scaledAt(.5, x, matchNum) + 55, 180), (float) (angle2 / 2), (float) (angle2 * -1), true, notScoredPaint);
+                        c.drawArc(new RectF((float) scaledAt(.5, x, matchNum) - 5, 120, (float) scaledAt(.5, x, matchNum) + 55, 180), (float) (angle2 / 2), (float) (360 - (angle2)), true, scoredPaint);
+                        c.drawText(lowGoalMade.toString(), (float) scaledAt(.5, x, matchNum) - 21, 160, textPaint);
+                        c.drawText(lowGoalMissed.toString(), (float) scaledAt(.5, x, matchNum) + 58, 160, textPaint);
+                    }
                 }
 
                 Integer lowBarCrosses = (Integer) data.get("teleop-lowBar");
-                int currentHeight = 310;
+                int currentHeight = 300;
                 c.drawText("LB: " + lowBarCrosses.toString(), (float) scaledAt(.5, x, matchNum), 260, textPaint);
                 if ((boolean) data.get("defense-portcullis")) {
                     Integer PCCrosses = (Integer) data.get("teleop-portcullis");
