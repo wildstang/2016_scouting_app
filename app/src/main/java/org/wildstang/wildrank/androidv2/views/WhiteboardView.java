@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import org.wildstang.wildrank.androidv2.R;
@@ -29,7 +30,6 @@ public class WhiteboardView extends View {
     //all the images
     Bitmap field;
     Bitmap boulder;
-    Bitmap lowBar;
     Bitmap portcullis;
     Bitmap moat;
     Bitmap ramparts;
@@ -45,11 +45,14 @@ public class WhiteboardView extends View {
     boolean run = false;
     //if the pen mode is enabled
     boolean penOn = false;
+    boolean isPenRed;
     //if a magnet is held
     boolean magnetHeld = false;
+    //if any defense location is toggled
+    boolean defenseToggle;
 
     //scale of the magnets and field to the screen
-    double scale;
+    double fieldScale;
     //scale of the magnet sources on the left
     double magScale;
     //the current magnet held (ignored if magnetHeld is false
@@ -63,6 +66,8 @@ public class WhiteboardView extends View {
     int buttonX;
     int buttonY;
     String position;
+    int defenseSizeWidth;
+    int defenseSizeHeight;
 
     //the magnet sources on the left
     List<GamePiece> pieces = new ArrayList<>();
@@ -84,7 +89,6 @@ public class WhiteboardView extends View {
         //loads all the raw images
         field = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.field);
         boulder = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.boulder);
-        lowBar = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.lowbar);
         portcullis = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.portcullis);
         moat = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.moat);
         ramparts = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ramparts);
@@ -101,51 +105,89 @@ public class WhiteboardView extends View {
     //it initializes images and buttons
     public void init() {
         //setups field and scales
+        fieldScale = ((5 * (double) getWidth()) / (6 * (double) field.getWidth()));
+
+        System.out.println("width " + getWidth()); // 1280
+        System.out.println("height " + getHeight()); // 663
+        System.out.println("field height " + (int) (field.getHeight() * fieldScale));
+        System.out.println("field width " + (int) (field.getWidth() * fieldScale));
+        System.out.println("scale " + fieldScale);
         magScale = ((double) getHeight() / (double) field.getHeight());
-        field = Bitmap.createScaledBitmap(field, (int) (magScale * field.getWidth()), getHeight(), false);
+        field = Bitmap.createScaledBitmap(field, (int) (field.getWidth() * fieldScale), (int) (field.getHeight() * fieldScale), false);
         //scale = (((double) getHeight() / 8.0) / (double) tote.getWidth());
+        defenseSizeWidth = (int) (40 * fieldScale);
+        defenseSizeHeight = (int) (43 * fieldScale);
 
         //creates the buttons
-        pieces.add(new GamePiece(10, 10,
-                Bitmap.createScaledBitmap(boulder, (int) (boulder.getWidth()), (int) (boulder.getHeight()), false),
-                Bitmap.createScaledBitmap(boulder, (int) (boulder.getWidth()), (int) (boulder.getHeight()), false)));
-        pieces.add(new GamePiece(10, 20 + pieces.get(0).getHeight(),
-                Bitmap.createScaledBitmap(robot, robot.getWidth(), (int) (robot.getHeight() * ((double) robot.getWidth() / (double) robot.getWidth())), false),
-                Bitmap.createScaledBitmap(robot, robot.getWidth(), 2 * (int) (robot.getHeight() * ((double) robot.getWidth() / (double) robot.getWidth())), false)));
+        pieces.add(new GamePiece(((getWidth() / 6) - (boulder.getWidth() * 3)) / 2, (2 * (getHeight() / 6)),
+                Bitmap.createScaledBitmap(boulder, (int) boulder.getWidth() * 3, (int) boulder.getWidth() * 3, false),
+                Bitmap.createScaledBitmap(boulder, (int) (boulder.getWidth() * 2.5), (int) (boulder.getHeight() * 2.5), false)));
+        pieces.add(new GamePiece(0, (2 * (getHeight() / 6)) + (boulder.getWidth() * 3),
+                Bitmap.createScaledBitmap(robot, (int) (getWidth() / 6), (int) (getHeight() / 6), false),
+                Bitmap.createScaledBitmap(robot, (int) (robot.getWidth() / 20), (int) (robot.getHeight() / 20), false)));
 
         //creates the side buttons for clearing and using the pen
-        int width = ((getWidth() / 6) + field.getWidth());
-        int buttonWidth = getWidth() - (width + 20);
-        buttons.add(new Button(width + 10, 10, buttonWidth, 2 * buttonWidth / 3 + 10, "Clear!", false));
-        buttons.add(new Button(width + 10, 2 * buttonWidth / 3 + 30, buttonWidth, 2 * buttonWidth / 3 + 10, "Pen On/Off", true));
-        buttons.add(new Button(width + 10, 3 * buttonWidth / 3 + 30, buttonWidth, 2 * buttonWidth / 3 + 10, "Clear Menus", false));
+        buttons.add(new Button(0, 0, getWidth() / 6, getHeight() / 6, "Clear!", false));
+        buttons.add(new Button(0, buttons.get(0).getHeight(), getWidth() / 6, getHeight() / 6, "Pen On/Off", true));
 
-        buttons.add(new Button(10, 10, 40, 43, "R1", false));
-        buttons.add(new Button(10, 10, 40, 43, "R2", false));
-        buttons.add(new Button(10, 10, 40, 43, "R3", false));
-        buttons.add(new Button(10, 10, 40, 43, "R4", false));
-        buttons.add(new Button(10, 10, 40, 43, "B1", false));
-        buttons.add(new Button(10, 10, 40, 43, "B2", false));
-        buttons.add(new Button(10, 10, 40, 43, "B3", false));
-        buttons.add(new Button(10, 10, 40, 43, "B4", false));
+        int b2x = (int) ((193 * fieldScale) + (getWidth() / 6));
+        int b2y = (int) ((195 * fieldScale));
+
+        int b3x = (int) ((193 * fieldScale) + (getWidth() / 6));
+        int b3y = (int) ((151 * fieldScale));
+
+        int b4x = (int) ((193 * fieldScale) + (getWidth() / 6));
+        int b4y = (int) ((107 * fieldScale));
+
+        int b5x = (int) ((193 * fieldScale) + (getWidth() / 6));
+        int b5y = (int) ((63 * fieldScale));
+
+        int r2x = (int) ((373 * fieldScale) + (getWidth() / 6));
+        int r2y = (int) ((63 * fieldScale));
+
+        int r3x = (int) ((373 * fieldScale) + (getWidth() / 6));
+        int r3y = (int) ((107 * fieldScale));
+
+        int r4x = (int) ((373 * fieldScale) + (getWidth() / 6));
+        int r4y = (int) ((151 * fieldScale));
+
+        int r5x = (int) ((373 * fieldScale) + (getWidth() / 6));
+        int r5y = (int) ((195 * fieldScale));
+
+        buttons.add(new Button(getWidth() / 6, (5 * getHeight() / 6), (5 * getWidth() / 6) / 8, getHeight() / 12, "R2", true));
+        buttons.add(new Button((getWidth() / 6) + ((5 * getWidth() / 6) / 8), (5 * getHeight() / 6), (5 * getWidth() / 6) / 8, getHeight() / 12, "R3", true));
+        buttons.add(new Button((getWidth() / 6) + (2 * ((5 * getWidth() / 6) / 8)), (5 * getHeight() / 6), (5 * getWidth() / 6) / 8, getHeight() / 12, "R4", true));
+        buttons.add(new Button((getWidth() / 6) + (3 * ((5 * getWidth() / 6) / 8)), (5 * getHeight() / 6), (5 * getWidth() / 6) / 8, getHeight() / 12, "R5", true));
+        buttons.add(new Button(getWidth() / 6, (11 * getHeight()) / 12, (5 * getWidth() / 6) / 8, getHeight() / 12, "B2", true));
+        buttons.add(new Button((getWidth() / 6) + ((5 * getWidth() / 6) / 8), (11 * getHeight()) / 12, (5 * getWidth() / 6) / 8, getHeight() / 12, "B3", true));
+        buttons.add(new Button((getWidth() / 6) + (2 * ((5 * getWidth() / 6) / 8)), (11 * getHeight()) / 12, (5 * getWidth() / 6) / 8, getHeight() / 12, "B4", true));
+        buttons.add(new Button((getWidth() / 6) + (3 * ((5 * getWidth() / 6) / 8)), (11 * getHeight()) / 12, (5 * getWidth() / 6) / 8, getHeight() / 12, "B5", true));
 
         //list for the bitmap gamepiece defenses
-        //corrisponds to R1
-        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
         //corrisponds to R2
-        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        mapDefenses.add(new GamePiece(r2x, r2y,
+                Bitmap.createScaledBitmap(blank, (int) (40 * fieldScale), (int) (43 * fieldScale), false), null));
         //corrisponds to R3
-        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        mapDefenses.add(new GamePiece(r3x, r3y,
+                Bitmap.createScaledBitmap(blank, (int) (40 * fieldScale), (int) (43 * fieldScale), false), null));
         //corrisponds to R4
-        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
-        //corrisponds to B1
-        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        mapDefenses.add(new GamePiece(r4x, r4y,
+                Bitmap.createScaledBitmap(blank, (int) (40 * fieldScale), (int) (43 * fieldScale), false), null));
+        //corrisponds to R5
+        mapDefenses.add(new GamePiece(r5x, r5y,
+                Bitmap.createScaledBitmap(blank, (int) (40 * fieldScale), (int) (43 * fieldScale), false), null));
         //corrisponds to B2
-        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        mapDefenses.add(new GamePiece(b2x, b2y,
+                Bitmap.createScaledBitmap(blank, (int) (40 * fieldScale), (int) (43 * fieldScale), false), null));
         //corrisponds to B3
-        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        mapDefenses.add(new GamePiece(b3x, b3y,
+                Bitmap.createScaledBitmap(blank, (int) (40 * fieldScale), (int) (43 * fieldScale), false), null));
         //corrisponds to B4
-        mapDefenses.add(new GamePiece(10,10,Bitmap.createBitmap(blank),Bitmap.createBitmap(blank)));
+        mapDefenses.add(new GamePiece(b4x, b4y,
+                Bitmap.createScaledBitmap(blank, (int) (40 * fieldScale), (int) (43 * fieldScale), false), null));
+        //corrisponds to B5
+        mapDefenses.add(new GamePiece(b5x, b5y,
+                Bitmap.createScaledBitmap(blank, (int) (40 * fieldScale), (int) (43 * fieldScale), false), null));
 
         //listener for touching the screen
         this.setOnTouchListener(new OnTouchListener() {
@@ -189,7 +231,7 @@ public class WhiteboardView extends View {
                             }
                         }
 
-                        //check if either of the buttons are being pressed
+                        //check if any of the buttons are being pressed
                         for (int i = 0; i < buttons.size(); i++) {
                             Button button = buttons.get(i);
                             if (x >= button.x && x <= button.x + button.width && y >= button.y && y <= button.y + button.height) {
@@ -199,6 +241,33 @@ public class WhiteboardView extends View {
                                     if (button.name.equals("Pen On/Off")) {
                                         penOn = buttons.get(i).pushed;
                                     }
+                                    if (button.name.equalsIgnoreCase("R2") || button.name.equalsIgnoreCase("R3") || button.name.equalsIgnoreCase("R4") || button.name.equalsIgnoreCase("R5") || button.name.equalsIgnoreCase("B2") || button.name.equalsIgnoreCase("B3") || button.name.equalsIgnoreCase("B4") || button.name.equalsIgnoreCase("B5")) {
+                                        if (buttons.get(i).pushed) {
+                                            position = button.name;
+                                        }
+                                        for (int d = 0; d < buttons.size(); d++) {
+                                            Button place = buttons.get(d);
+                                            if (place.name != position && place.name != "Pen On/Off") {
+                                                buttons.get(d).pushed = false;
+                                            }
+                                        }
+                                        defenseToggle = buttons.get(i).pushed;
+                                        System.out.println("de toggle" + defenseToggle);
+                                    }
+                                    if (defenseToggle) {
+                                        //creates the "buttons" in the dropdown
+                                        defensesBtn.add(new Button((getWidth() / 6) + (4 * ((5 * getWidth() / 6) / 8)), (5 * getHeight() / 6), (5 * getWidth() / 6) / 8, getHeight() / 12, "Portcullis", false));
+                                        defensesBtn.add(new Button((getWidth() / 6) + (5 * ((5 * getWidth() / 6) / 8)), (5 * getHeight() / 6), (5 * getWidth() / 6) / 8, getHeight() / 12, "Moat", false));
+                                        defensesBtn.add(new Button((getWidth() / 6) + (6 * ((5 * getWidth() / 6) / 8)), (5 * getHeight() / 6), (5 * getWidth() / 6) / 8, getHeight() / 12, "Draw Bridge", false));
+                                        defensesBtn.add(new Button((getWidth() / 6) + (7 * ((5 * getWidth() / 6) / 8)), (5 * getHeight() / 6), (5 * getWidth() / 6) / 8, getHeight() / 12, "Rock Wall", false));
+                                        defensesBtn.add(new Button((getWidth() / 6) + (4 * ((5 * getWidth() / 6) / 8)), (11 * getHeight()) / 12, (5 * getWidth() / 6) / 8, getHeight() / 12, "Quad Ramp", false));
+                                        defensesBtn.add(new Button((getWidth() / 6) + (5 * ((5 * getWidth() / 6) / 8)), (11 * getHeight()) / 12, (5 * getWidth() / 6) / 8, getHeight() / 12, "Ramparts", false));
+                                        defensesBtn.add(new Button((getWidth() / 6) + (6 * ((5 * getWidth() / 6) / 8)), (11 * getHeight()) / 12, (5 * getWidth() / 6) / 8, getHeight() / 12, "Sally Port", false));
+                                        defensesBtn.add(new Button((getWidth() / 6) + (7 * ((5 * getWidth() / 6) / 8)), (11 * getHeight()) / 12, (5 * getWidth() / 6) / 8, getHeight() / 12, "Rough Terrain", false));
+                                    } else {
+                                        defensesBtn = new ArrayList<>();
+                                        System.out.println("made it");
+                                    }
                                 } else {
                                     //otherwise just set it pushed
                                     buttons.get(i).pushed = true;
@@ -207,22 +276,16 @@ public class WhiteboardView extends View {
                                 //if you didn't press a button and its not a toggle depress it
                                 buttons.get(i).pushed = false;
                             }
-                            if (button.name.equals("R1") || button.name.equals("R2") || button.name.equals("R3") || button.name.equals("R4") || button.name.equals("B1") || button.name.equals("B2") || button.name.equals("B3") || button.name.equals("B4")) {
-                                orginButtonX = button.x;
-                                orginButtonY = button.y;
-                                String position = button.name;
-
-                                //creates the "buttons" in the dropdown
-                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY, buttonX, buttonY, "Portcullis", false));
-                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (1 * buttonY), buttonX, buttonY, "Moat", false));
-                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (2 * buttonY), buttonX, buttonY, "Ramparts", false));
-                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (3 * buttonY), buttonX, buttonY, "Draw Bridge", false));
-                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (4 * buttonY), buttonX, buttonY, "Sally Port", false));
-                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (5 * buttonY), buttonX, buttonY, "Rough Terrain", false));
-                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (6 * buttonY), buttonX, buttonY, "Rock Wall", false));
-                                defensesBtn.add(new Button(orginButtonX + 40, orginButtonY - (7 * buttonY), buttonX, buttonY, "Quad Ramp", false));
+                        }
+                        for(int t = 0; t < defensesBtn.size(); t++){
+                            Button button = defensesBtn.get(t);
+                            if (x >= button.x && x <= button.x + button.width && y >= button.y && y <= button.y + button.height) {
+                                if(!button.toggle){
+                                    defensesBtn.get(t).pushed = true;
+                                }
+                            }else if (!button.toggle){
+                                defensesBtn.get(t).pushed = false;
                             }
-
                         }
 
                         return true;
@@ -241,7 +304,9 @@ public class WhiteboardView extends View {
                         return true;
                     case MotionEvent.ACTION_UP:
                         //if let go of
-
+                        if ((x < (getWidth() / 6)) && (y > ((5 * getHeight()) / 6))) {
+                            isPenRed = !isPenRed;
+                        }
                         //check if you are letting go of a button
                         for (int i = 0; i < buttons.size(); i++) {
                             Button button = buttons.get(i);
@@ -250,7 +315,6 @@ public class WhiteboardView extends View {
                                 if (button.name.equals("Clear!")) {
                                     magnets = new ArrayList<>();
                                     points = new ArrayList<>();
-
                                 }
                             }
 
@@ -258,201 +322,347 @@ public class WhiteboardView extends View {
                             if (!button.toggle) {
                                 buttons.get(i).pushed = false;
                             }
-                            if (button.name.equals("Clear Menus")) {
-                                defensesBtn = new ArrayList<>();
+                        }
+                        for (int i = 0; i < defensesBtn.size(); i++) {
+                            Button button = defensesBtn.get(i);
+                            if (x >= button.x && x <= button.x + button.width && y >= button.y && y <= button.y + button.height && button.pushed && !button.toggle) {
+                                if (button.name.equalsIgnoreCase("Quad Ramp")) {
+                                    int b = -1;
+                                    switch (position) {
+                                        case "R2":
+                                            b = 0;
+                                            break;
+                                        case "R3":
+                                            b = 1;
+                                            break;
+                                        case "R4":
+                                            b = 2;
+                                            break;
+                                        case "R5":
+                                            b = 3;
+                                            break;
+                                        case "B2":
+                                            b = 4;
+                                            break;
+                                        case "B3":
+                                            b = 5;
+                                            break;
+                                        case "B4":
+                                            b = 6;
+                                            break;
+                                        case "B5":
+                                            b = 7;
+                                            break;
+                                        default:
+                                            for (i = 0; i < mapDefenses.size(); i++) {
+                                                mapDefenses.get(i).changeImage(blank);
+                                            }
+                                    }
+                                    if (b != -1) {
+                                        mapDefenses.get(b).changeImage(quadRamp);
+                                        defensesBtn = new ArrayList<>();
+                                        for (int j = 0; j < buttons.size(); j++){
+                                            if(buttons.get(j).name != "Pen On/Off"){
+                                                buttons.get(j).pushed = false;
+                                            }
+                                        }
+                                    }
+                                } else if (button.name.equalsIgnoreCase("Portcullis")) {
+                                    int b = -1;
+                                    switch (position) {
+                                        case "R2":
+                                            b = 0;
+                                            break;
+                                        case "R3":
+                                            b = 1;
+                                            break;
+                                        case "R4":
+                                            b = 2;
+                                            break;
+                                        case "R5":
+                                            b = 3;
+                                            break;
+                                        case "B2":
+                                            b = 4;
+                                            break;
+                                        case "B3":
+                                            b = 5;
+                                            break;
+                                        case "B4":
+                                            b = 6;
+                                            break;
+                                        case "B5":
+                                            b = 7;
+                                            break;
+                                        default:
+                                            for (i = 0; i < mapDefenses.size(); i++) {
+                                                mapDefenses.get(i).changeImage(portcullis);
+                                            }
+                                    }
+                                    if (b != -1) {
+                                        mapDefenses.get(b).changeImage(portcullis);
+                                        defensesBtn = new ArrayList<>();
+                                        for (int j = 0; j < buttons.size(); j++){
+                                            if(buttons.get(j).name != "Pen On/Off"){
+                                                buttons.get(j).pushed = false;
+                                            }
+                                        }
+                                    }
+                                } else if (button.name.equalsIgnoreCase("Moat")) {
+                                    int b = -1;
+                                    switch (position) {
+                                        case "R2":
+                                            b = 0;
+                                            break;
+                                        case "R3":
+                                            b = 1;
+                                            break;
+                                        case "R4":
+                                            b = 2;
+                                            break;
+                                        case "R5":
+                                            b = 3;
+                                            break;
+                                        case "B2":
+                                            b = 4;
+                                            break;
+                                        case "B3":
+                                            b = 5;
+                                            break;
+                                        case "B4":
+                                            b = 6;
+                                            break;
+                                        case "B5":
+                                            b = 7;
+                                            break;
+                                        default:
+                                            for (i = 0; i < mapDefenses.size(); i++) {
+                                                mapDefenses.get(i).changeImage(moat);
+                                            }
+                                    }
+                                    if (b != -1) {
+                                        mapDefenses.get(b).changeImage(moat);
+                                        defensesBtn = new ArrayList<>();
+                                        for (int j = 0; j < buttons.size(); j++){
+                                            if(buttons.get(j).name != "Pen On/Off"){
+                                                buttons.get(j).pushed = false;
+                                            }
+                                        }
+                                    }
+                                } else if (button.name.equalsIgnoreCase("Ramparts")) {
+                                    int b = -1;
+                                    switch (position) {
+                                        case "R2":
+                                            b = 0;
+                                            break;
+                                        case "R3":
+                                            b = 1;
+                                            break;
+                                        case "R4":
+                                            b = 2;
+                                            break;
+                                        case "R5":
+                                            b = 3;
+                                            break;
+                                        case "B2":
+                                            b = 4;
+                                            break;
+                                        case "B3":
+                                            b = 5;
+                                            break;
+                                        case "B4":
+                                            b = 6;
+                                            break;
+                                        case "B5":
+                                            b = 7;
+                                            break;
+                                        default:
+                                            for (i = 0; i < mapDefenses.size(); i++) {
+                                                mapDefenses.get(i).changeImage(ramparts);
+                                            }
+                                    }
+                                    if (b != -1) {
+                                        mapDefenses.get(b).changeImage(ramparts);
+                                        defensesBtn = new ArrayList<>();
+                                        for (int j = 0; j < buttons.size(); j++){
+                                            if(buttons.get(j).name != "Pen On/Off"){
+                                                buttons.get(j).pushed = false;
+                                            }
+                                        }
+                                    }
+                                } else if (button.name.equalsIgnoreCase("Draw Bridge")) {
+                                    int b = -1;
+                                    switch (position) {
+                                        case "R2":
+                                            b = 0;
+                                            break;
+                                        case "R3":
+                                            b = 1;
+                                            break;
+                                        case "R4":
+                                            b = 2;
+                                            break;
+                                        case "R5":
+                                            b = 3;
+                                            break;
+                                        case "B2":
+                                            b = 4;
+                                            break;
+                                        case "B3":
+                                            b = 5;
+                                            break;
+                                        case "B4":
+                                            b = 6;
+                                            break;
+                                        case "B5":
+                                            b = 7;
+                                            break;
+                                        default:
+                                            for (i = 0; i < mapDefenses.size(); i++) {
+                                                mapDefenses.get(i).changeImage(drawBridge);
+                                            }
+                                    }
+                                    if (b != -1) {
+                                        mapDefenses.get(b).changeImage(drawBridge);
+                                        defensesBtn = new ArrayList<>();
+                                        for (int j = 0; j < buttons.size(); j++){
+                                            if(buttons.get(j).name != "Pen On/Off"){
+                                                buttons.get(j).pushed = false;
+                                            }
+                                        }
+                                    }
+                                } else if (button.name.equalsIgnoreCase("Sally Port")) {
+                                    int b = -1;
+                                    switch (position) {
+                                        case "R2":
+                                            b = 0;
+                                            break;
+                                        case "R3":
+                                            b = 1;
+                                            break;
+                                        case "R4":
+                                            b = 2;
+                                            break;
+                                        case "R5":
+                                            b = 3;
+                                            break;
+                                        case "B2":
+                                            b = 4;
+                                            break;
+                                        case "B3":
+                                            b = 5;
+                                            break;
+                                        case "B4":
+                                            b = 6;
+                                            break;
+                                        case "B5":
+                                            b = 7;
+                                            break;
+                                        default:
+                                            for (i = 0; i < mapDefenses.size(); i++) {
+                                                mapDefenses.get(i).changeImage(sallyPort);
+                                            }
+                                    }
+                                    if (b != -1) {
+                                        mapDefenses.get(b).changeImage(sallyPort);
+                                        defensesBtn = new ArrayList<>();
+                                        for (int j = 0; j < buttons.size(); j++){
+                                            if(buttons.get(j).name != "Pen On/Off"){
+                                                buttons.get(j).pushed = false;
+                                            }
+                                        }
+                                    }
+                                } else if (button.name.equalsIgnoreCase("Rough Terrain")) {
+                                    int b = -1;
+                                    switch (position) {
+                                        case "R2":
+                                            b = 0;
+                                            break;
+                                        case "R3":
+                                            b = 1;
+                                            break;
+                                        case "R4":
+                                            b = 2;
+                                            break;
+                                        case "R5":
+                                            b = 3;
+                                            break;
+                                        case "B2":
+                                            b = 4;
+                                            break;
+                                        case "B3":
+                                            b = 5;
+                                            break;
+                                        case "B4":
+                                            b = 6;
+                                            break;
+                                        case "B5":
+                                            b = 7;
+                                            break;
+                                        default:
+                                            for (i = 0; i < mapDefenses.size(); i++) {
+                                                mapDefenses.get(i).changeImage(roughTerrain);
+                                            }
+                                    }
+                                    if (b != -1) {
+                                        mapDefenses.get(b).changeImage(roughTerrain);
+                                        defensesBtn = new ArrayList<>();
+                                        for (int j = 0; j < buttons.size(); j++){
+                                            if(buttons.get(j).name != "Pen On/Off"){
+                                                buttons.get(j).pushed = false;
+                                            }
+                                        }
+                                    }
+                                } else if (button.name.equalsIgnoreCase("Rock Wall")) {
+                                    int b = -1;
+                                    switch (position) {
+                                        case "R2":
+                                            b = 0;
+                                            break;
+                                        case "R3":
+                                            b = 1;
+                                            break;
+                                        case "R4":
+                                            b = 2;
+                                            break;
+                                        case "R5":
+                                            b = 3;
+                                            break;
+                                        case "B2":
+                                            b = 4;
+                                            break;
+                                        case "B3":
+                                            b = 5;
+                                            break;
+                                        case "B4":
+                                            b = 6;
+                                            break;
+                                        case "B5":
+                                            b = 7;
+                                            break;
+                                        default:
+                                            for (i = 0; i < mapDefenses.size(); i++) {
+                                                mapDefenses.get(i).changeImage(rockWall);
+                                            }
+                                    }
+                                    if (b != -1) {
+                                        mapDefenses.get(b).changeImage(rockWall);
+                                        defensesBtn = new ArrayList<>();
+                                        for (int j = 0; j < buttons.size(); j++){
+                                            if(buttons.get(j).name != "Pen On/Off"){
+                                                buttons.get(j).pushed = false;
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }else if(!button.toggle){
+                                button.toggle = false;
                             }
                         }
-                        for (int i = 0; i < defensesBtn.size(); i++){
-                            Button button = defensesBtn.get(i);
-                            if(button.name.equals("Quad Ramp")){
-                                switch (position){
-                                    case "R1": mapDefenses.get(0).changeImage(quadRamp);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R2": mapDefenses.get(1).changeImage(quadRamp);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R3": mapDefenses.get(2).changeImage(quadRamp);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R4": mapDefenses.get(3).changeImage(quadRamp);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B1": mapDefenses.get(4).changeImage(quadRamp);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B2": mapDefenses.get(5).changeImage(quadRamp);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B3": mapDefenses.get(6).changeImage(quadRamp);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B4": mapDefenses.get(7).changeImage(quadRamp);
-                                        defensesBtn = new ArrayList<>();
-                                    default: for(i = 0; i < mapDefenses.size(); i++){
-                                        mapDefenses.get(i).changeImage(blank);
-                                    }
-                                        defensesBtn = new ArrayList<>();
-                                }
-                            }else if(button.name.equals("Portcullis")){
-                                switch (position){
-                                    case "R1": mapDefenses.get(0).changeImage(portcullis);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R2": mapDefenses.get(1).changeImage(portcullis);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R3": mapDefenses.get(2).changeImage(portcullis);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R4": mapDefenses.get(3).changeImage(portcullis);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B1": mapDefenses.get(4).changeImage(portcullis);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B2": mapDefenses.get(5).changeImage(portcullis);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B3": mapDefenses.get(6).changeImage(portcullis);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B4": mapDefenses.get(7).changeImage(portcullis);
-                                        defensesBtn = new ArrayList<>();
-                                    default: for(i = 0; i < mapDefenses.size(); i++){
-                                        mapDefenses.get(i).changeImage(blank);
-                                    }
-                                        defensesBtn = new ArrayList<>();
-                                }
-                            }else if(button.name.equals("Moat")){
-                                switch (position){
-                                    case "R1": mapDefenses.get(0).changeImage(moat);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R2": mapDefenses.get(1).changeImage(moat);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R3": mapDefenses.get(2).changeImage(moat);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R4": mapDefenses.get(3).changeImage(moat);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B1": mapDefenses.get(4).changeImage(moat);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B2": mapDefenses.get(5).changeImage(moat);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B3": mapDefenses.get(6).changeImage(moat);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B4": mapDefenses.get(7).changeImage(moat);
-                                        defensesBtn = new ArrayList<>();
-                                    default: for(i = 0; i < mapDefenses.size(); i++){
-                                        mapDefenses.get(i).changeImage(blank);
-                                    }
-                                        defensesBtn = new ArrayList<>();
-                                }
-                            }else if(button.name.equals("Ramparts")){
-                                switch (position){
-                                    case "R1": mapDefenses.get(0).changeImage(ramparts);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R2": mapDefenses.get(1).changeImage(ramparts);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R3": mapDefenses.get(2).changeImage(ramparts);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R4": mapDefenses.get(3).changeImage(ramparts);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B1": mapDefenses.get(4).changeImage(ramparts);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B2": mapDefenses.get(5).changeImage(ramparts);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B3": mapDefenses.get(6).changeImage(ramparts);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B4": mapDefenses.get(7).changeImage(ramparts);
-                                        defensesBtn = new ArrayList<>();
-                                    default: for(i = 0; i < mapDefenses.size(); i++){
-                                        mapDefenses.get(i).changeImage(blank);
-                                    }
-                                        defensesBtn = new ArrayList<>();
-                                }
-                            }else if(button.name.equals("Draw Bridge")){
-                                switch (position){
-                                    case "R1": mapDefenses.get(0).changeImage(drawBridge);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R2": mapDefenses.get(1).changeImage(drawBridge);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R3": mapDefenses.get(2).changeImage(drawBridge);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R4": mapDefenses.get(3).changeImage(drawBridge);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B1": mapDefenses.get(4).changeImage(drawBridge);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B2": mapDefenses.get(5).changeImage(drawBridge);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B3": mapDefenses.get(6).changeImage(drawBridge);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B4": mapDefenses.get(7).changeImage(drawBridge);
-                                        defensesBtn = new ArrayList<>();
-                                    default: for(i = 0; i < mapDefenses.size(); i++){
-                                        mapDefenses.get(i).changeImage(blank);
-                                    }
-                                        defensesBtn = new ArrayList<>();
-                                }
-                            }else if(button.name.equals("Sally Port")){
-                                switch (position){
-                                    case "R1": mapDefenses.get(0).changeImage(sallyPort);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R2": mapDefenses.get(1).changeImage(sallyPort);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R3": mapDefenses.get(2).changeImage(sallyPort);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R4": mapDefenses.get(3).changeImage(sallyPort);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B1": mapDefenses.get(4).changeImage(sallyPort);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B2": mapDefenses.get(5).changeImage(sallyPort);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B3": mapDefenses.get(6).changeImage(sallyPort);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B4": mapDefenses.get(7).changeImage(sallyPort);
-                                        defensesBtn = new ArrayList<>();
-                                    default: for(i = 0; i < mapDefenses.size(); i++){
-                                        mapDefenses.get(i).changeImage(blank);
-                                    }
-                                        defensesBtn = new ArrayList<>();
-                                }
-                            }else if(button.name.equals("Rough Terrain")){
-                                switch (position){
-                                    case "R1": mapDefenses.get(0).changeImage(roughTerrain);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R2": mapDefenses.get(1).changeImage(roughTerrain);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R3": mapDefenses.get(2).changeImage(roughTerrain);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R4": mapDefenses.get(3).changeImage(roughTerrain);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B1": mapDefenses.get(4).changeImage(roughTerrain);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B2": mapDefenses.get(5).changeImage(roughTerrain);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B3": mapDefenses.get(6).changeImage(roughTerrain);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B4": mapDefenses.get(7).changeImage(roughTerrain);
-                                        defensesBtn = new ArrayList<>();
-                                    default: for(i = 0; i < mapDefenses.size(); i++){
-                                        mapDefenses.get(i).changeImage(blank);
-                                    }
-                                        defensesBtn = new ArrayList<>();
-                                }
-                            }else if(button.name.equals("Rock Wall")){
-                                switch (position){
-                                    case "R1": mapDefenses.get(0).changeImage(rockWall);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R2": mapDefenses.get(1).changeImage(rockWall);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R3": mapDefenses.get(2).changeImage(rockWall);
-                                        defensesBtn = new ArrayList<>();
-                                    case "R4": mapDefenses.get(3).changeImage(rockWall);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B1": mapDefenses.get(4).changeImage(rockWall);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B2": mapDefenses.get(5).changeImage(rockWall);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B3": mapDefenses.get(6).changeImage(rockWall);
-                                        defensesBtn = new ArrayList<>();
-                                    case "B4": mapDefenses.get(7).changeImage(rockWall);
-                                        defensesBtn = new ArrayList<>();
-                                    default: for(i = 0; i < mapDefenses.size(); i++){
-                                        mapDefenses.get(i).changeImage(blank);
-                                    }
-                                        defensesBtn = new ArrayList<>();
-                                }
-                            }
-                                                    }
                         //check if you are letting go of a magnet on the left column
                         for (int i = 0; i < magnets.size(); i++) {
-                            if (magnets.get(i).x < getWidth() / 6) {
+                            if ((magnets.get(i).x < (getWidth() / 6)) && (magnets.get(i).y > ((5 * getHeight()) / 6))) {
                                 //if it is left remove it
                                 magnets.remove(i);
                             }
@@ -476,9 +686,16 @@ public class WhiteboardView extends View {
         Paint paint = new Paint();
 
         //draws a blank canvas
-        paint.setColor(Color.WHITE);
-        canvas.drawRect(0, 0, getWidth() / 6, getHeight(), paint);
+//        paint.setColor(Color.WHITE);
+//        canvas.drawRect(0, (5 * getHeight()) / 6, getWidth() / 6, 0, paint);
 
+        if (isPenRed) {
+            paint.setColor(Color.RED);
+        } else {
+            paint.setColor(Color.BLUE);
+        }
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(0, ((5 * getHeight()) / 6), ((5 * getHeight()) / 6), 0, paint);
         //draws the field and all the image buttons
         canvas.drawBitmap(field, getWidth() / 6, 0, null);
         for (int i = 0; i < pieces.size(); i++) {
@@ -486,7 +703,7 @@ public class WhiteboardView extends View {
         }
 
         //draws the defenses on the field
-        for (int i = 0; i < mapDefenses.size(); i++){
+        for (int i = 0; i < mapDefenses.size(); i++) {
             mapDefenses.get(i).draw(canvas);
         }
 
@@ -501,12 +718,11 @@ public class WhiteboardView extends View {
         }
 
         //draws the dropdowns
-        for (int i = 0; i < defensesBtn.size(); i++){
+        for (int i = 0; i < defensesBtn.size(); i++) {
             defensesBtn.get(i).draw(canvas);
         }
 
         //draws the pretty drawing you made
-        paint.setColor(Color.BLUE);
         for (int i = 0; i < points.size(); i++) {
             for (int j = 1; j < points.get(i).size(); j++) {
                 if (j > 0) {
@@ -572,6 +788,14 @@ public class WhiteboardView extends View {
             paint.setColor(Color.BLACK);
             c.drawText(name, x + width / 3, y + height / 3, paint);
         }
+
+        public int getWidth() {
+            return this.width;
+        }
+
+        public int getHeight() {
+            return this.height;
+        }
     }
 
     //this is a object for easily containing an x and y coordinate
@@ -625,9 +849,11 @@ public class WhiteboardView extends View {
             return magnetImage.getHeight();
         }
 
-        public int getMagnetWidth() {return magnetImage.getWidth();}
+        public int getMagnetWidth() {
+            return magnetImage.getWidth();
+        }
 
-        public void changeImage(Bitmap newImage){
+        public void changeImage(Bitmap newImage) {
             this.image = newImage;
         }
     }
