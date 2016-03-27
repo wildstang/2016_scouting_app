@@ -111,7 +111,8 @@ public class TeamSummariesInfoFragment extends TeamSummariesFragment {
         teamImageView.setImageDrawable(getView().getResources().getDrawable(R.drawable.frc4212));
     }
 
-    private void loadTeamImageFromStream() {
+    private void 
+    loadTeamImageFromStream() {
         double width = bitmap.getWidth();
         double height = bitmap.getHeight();
         if (height > 750) {

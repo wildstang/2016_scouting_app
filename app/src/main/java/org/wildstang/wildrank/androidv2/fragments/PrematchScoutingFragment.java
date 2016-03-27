@@ -52,38 +52,39 @@ public class PrematchScoutingFragment extends ScoutingFragment implements View.O
         ArrayList<String> defenses = new ArrayList<String>(4);
         if (v.getId() == R.id.done_Pre) {
             int numChecked = 0;
-            if (portcullis.isChecked()) {
+            // Category A
+            if (portcullis.isChecked() && !quad_ramp.isChecked()) {
                 numChecked++;
                 defenses.add(StrongholdConstants.PORTCULLIS);
-            }
-            if (rock_wall.isChecked()) {
-                numChecked++;
-                defenses.add(StrongholdConstants.ROCK_WALL);
-            }
-            if (drawbridge.isChecked()) {
-                numChecked++;
-                defenses.add(StrongholdConstants.DRAWBRIDGE);
-            }
-            if (sallyport.isChecked()) {
-                numChecked++;
-                defenses.add(StrongholdConstants.SALLYPORT);
-            }
-            if (moat.isChecked()) {
-                numChecked++;
-                defenses.add(StrongholdConstants.MOAT);
-            }
-            if (quad_ramp.isChecked()) {
+            } else if (quad_ramp.isChecked() && !portcullis.isChecked()) {
                 numChecked++;
                 defenses.add(StrongholdConstants.QUAD_RAMP);
             }
-            if (ramparts.isChecked()) {
+            // Category B
+            if (moat.isChecked() && !ramparts.isChecked()) {
+                numChecked++;
+                defenses.add(StrongholdConstants.MOAT);
+            } else if (ramparts.isChecked() && !moat.isChecked()) {
                 numChecked++;
                 defenses.add(StrongholdConstants.RAMPARTS);
             }
-            if (rough_terrain.isChecked()) {
+            // Category C
+            if (drawbridge.isChecked() && !sallyport.isChecked()) {
+                numChecked++;
+                defenses.add(StrongholdConstants.DRAWBRIDGE);
+            } else if (sallyport.isChecked() && !drawbridge.isChecked()) {
+                numChecked++;
+                defenses.add(StrongholdConstants.SALLYPORT);
+            }
+            // Category D
+            if (rock_wall.isChecked() && !rough_terrain.isChecked()) {
+                numChecked++;
+                defenses.add(StrongholdConstants.ROCK_WALL);
+            } else if (rough_terrain.isChecked() && !rock_wall.isChecked()) {
                 numChecked++;
                 defenses.add(StrongholdConstants.ROUGH_TERRAIN);
             }
+
             if (numChecked == 4) {
                 ActiveDefenses.setDefenses(defenses);
                 Activity activity = getActivity();
@@ -97,7 +98,7 @@ public class PrematchScoutingFragment extends ScoutingFragment implements View.O
                 if (activity instanceof ScoutMatchActivity) {
                     ((ScoutMatchActivity) activity).setSwipeEnabled(false);
                 }
-                Toast.makeText(getContext(), "Please select exactly 4 defenses!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Please select exactly 4 defenses, one from A, B, C, and D categories!", Toast.LENGTH_LONG).show();
             }
         }
     }

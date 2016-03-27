@@ -1,6 +1,5 @@
 package org.wildstang.wildrank.androidv2.views.data;
 
-
 import android.content.Context;
 import android.util.AttributeSet;
 
@@ -11,9 +10,11 @@ import org.wildstang.wildrank.androidv2.interfaces.IMatchDataView;
 import java.util.List;
 import java.util.Map;
 
-public class MatchDataHighGoalAutoAccuracy extends MatchDataView implements IMatchDataView {
-
-    public MatchDataHighGoalAutoAccuracy(Context context, AttributeSet attrs) {
+/**
+ * Created by Janine on 3/8/2016.
+ */
+public class MatchDataChallengeRateView extends MatchDataView implements IMatchDataView {
+    public MatchDataChallengeRateView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -24,22 +25,19 @@ public class MatchDataHighGoalAutoAccuracy extends MatchDataView implements IMat
         } else if (documents.size() == 0) {
             return;
         }
-        double highGoalMade = 0;
-        double highGoalMissed = 0;
+        double matchesChallenged = 0;
+        double matches = documents.size();
         for (Document document : documents) {
             Map<String, Object> data = (Map<String, Object>) document.getProperty("data");
-            if (data == null) {
-                return;
-            }
-            highGoalMissed += (int) data.get("auto-highGoalMissed");
-            highGoalMade += (int) data.get("auto-highGoalMade");;
+            int didChal = (boolean) data.get("teleop-challenged") || (boolean) data.get("teleop-scaleSuccessful") == true ? 1 : 0;
+
+            matchesChallenged += didChal;
         }
-        if (highGoalMade == 0 && highGoalMissed == 0) {
+        if (matchesChallenged == 0 && matches == 0) {
             setValueText("N/A");
         } else {
-            double percentage = (highGoalMade / (highGoalMade + highGoalMissed));
+            double percentage = (matchesChallenged / (matches));
             setValueText(formatPercentageAsString(percentage));
         }
-
     }
 }

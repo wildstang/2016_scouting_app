@@ -31,7 +31,7 @@ public class MatchDataLowGoalAutoAccuracy extends MatchDataView implements IMatc
             if (data == null) {
                 return;
             }
-            highGoalMissed = (int) data.get("auto-highGoalMissed");
+            highGoalMissed += (int) data.get("auto-highGoalMissed");
             highGoalMade += (int) data.get("auto-highGoalMade");;
         }
         if (highGoalMade == 0 && highGoalMissed == 0) {

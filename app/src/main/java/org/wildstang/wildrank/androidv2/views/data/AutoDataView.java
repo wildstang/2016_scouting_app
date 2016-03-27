@@ -4,82 +4,79 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
 import com.couchbase.lite.Document;
 
-import org.wildstang.wildrank.androidv2.models.MatchModel;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-public class StackDataView extends View {
-    List<MatchModel> matches = new ArrayList<>();
-    int stackCount = 0;
+public class AutoDataView extends View {
+    private List<Document> matchDocs;
 
-    Paint textPaint, boulderPaint, scaledPaint, notScoredPaint, outlinePaint;
+    Paint textPaint, boulderPaint, scaledPaint, scoredPaint, notScoredPaint, outlinePaint, smallTextPaint, idlePaint;
 
-    public StackDataView(Context context, AttributeSet attrs) {
+
+    public AutoDataView(Context context, AttributeSet attrs) {
         super(context, attrs);
         textPaint = new Paint();
+        textPaint.setTextSize(25);
+        textPaint.setColor(Color.BLACK);
+        smallTextPaint = new Paint();
+        smallTextPaint.setTextSize(15);
         textPaint.setColor(Color.BLACK);
         boulderPaint = new Paint();
         boulderPaint.setColor(Color.DKGRAY);
         outlinePaint = new Paint();
         outlinePaint.setColor(Color.BLACK);
         outlinePaint.setStyle(Paint.Style.STROKE);
+        scoredPaint = new Paint();
+        scoredPaint.setColor(Color.argb(150, 0, 255, 0));
         notScoredPaint = new Paint();
-        notScoredPaint.setColor(Color.argb(200, 255, 0, 0)); // Translucent blue
+        notScoredPaint.setColor(Color.argb(150, 255, 0, 0));
+        idlePaint = new Paint();
+        idlePaint.setColor(Color.argb(150, 0, 0, 255));
     }
 
     public void acceptNewTeamData(List<Document> matchDocs) {
         if (matchDocs == null || matchDocs.isEmpty()) {
-            matches = new ArrayList<>();
+            invalidate();
             return;
         }
-        matches = new ArrayList<>();
         // Sorts the matches by match number
         Collections.sort(matchDocs, new MatchDocumentComparator());
 
-        // Default, empty MatchModel to compare to
-//        for (Document doc : matchDocs) {
-//            Map<String, Object> data = (Map<String, Object>) doc.getProperty("data");
-//            List<Map<String, Object>> matchData = (List<Map<String, Object>>) data.get("matches");
-//            MatchModel match = new MatchModel();
-//                for (int j = 0; j < matchData.size(); j++) {
-//                    Log.d("wildrank", "stack for match " + (String) doc.getProperty("match_key") + ": " + matchData.get(j));
-//                    match = MatchModel.fromMap(matchData.get(j));
-//
-//                }
-//            matches.add(match);
-//        }
+        this.matchDocs = matchDocs;
+
         invalidate();
     }
 
     @Override
     public void onDraw(Canvas c) { // code for drawing everything
-//        if (matches.isEmpty()) {
-//            c.drawText("No data exists for this team.", 100, 100, textPaint);
-//        }
-//
-//
-//        int matchNum = 0;
-//        int x;
-//        for (MatchModel match : matches) {
-//            matchNum++;
-//            x = getWidth() * matchNum / matches.size();
-//
-//
-//
-//            // Draw line to separate matches
-//            c.drawLine(x, getHeight() - 50, x * (matchNum + 1) / matchNum, getHeight() - 50, outlinePaint);
-//            c.drawLine(getWidth() * matchNum/ matches.size(), 0, getWidth() * matchNum / matches.size(), getHeight(), outlinePaint);
-//       }
+        if (matchDocs == null || matchDocs.isEmpty()) {
+            c.drawText("No data exists for this team.", 100, 100, textPaint);
+        } else {
+            int matchNum = 0;
+            int x;
+            c.drawText("H: ", 5, 60, textPaint);
+            c.drawText("L: ", 5, 160, textPaint);
+            for (Document doc : matchDocs) {
+                Map<String, Object> data = (Map<String, Object>) doc.getProperty("data");
+                matchNum++;
+                x = (getWidth() - 25) * matchNum / matchDocs.size();
+
+            }
+        }
+    }
+
+    private double scaledAt(double percent, int totalWidth, int matchNum) {
+        double oneWidth = (double) totalWidth / (double) matchNum;
+        return totalWidth - oneWidth + (oneWidth * percent);
     }
 
     class MatchDocumentComparator implements Comparator<Document> {

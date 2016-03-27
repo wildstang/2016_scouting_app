@@ -43,6 +43,11 @@
             android:theme="@style/AppThemeNoActionBar" />
 
         <activity
+            android:name=".activities.MatchStrategyActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoActionBar" />
+
+        <activity
             android:name=".activities.ScoutPitActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoActionBar" />

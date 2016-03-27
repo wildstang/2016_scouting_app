@@ -6,20 +6,22 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.couchbase.lite.Document;
 
+import org.wildstang.wildrank.androidv2.fragments.TeamSummariesAutoFragment;
 import org.wildstang.wildrank.androidv2.fragments.TeamSummariesDataFragment;
 import org.wildstang.wildrank.androidv2.fragments.TeamSummariesInfoFragment;
 import org.wildstang.wildrank.androidv2.fragments.TeamSummariesRawDataFragment;
-import org.wildstang.wildrank.androidv2.fragments.TeamSummariesStackFragment;
+import org.wildstang.wildrank.androidv2.fragments.TeamSummariesTeleopFragment;
 
 import java.util.List;
 
 public class TeamSummariesFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-    static final int NUM_FRAGMENTS = 4;
+    static final int NUM_FRAGMENTS = 5;
 
     private TeamSummariesInfoFragment infoFragment;
     private TeamSummariesDataFragment dataFragment;
-    private TeamSummariesStackFragment stackFragment;
+    private TeamSummariesAutoFragment autoFragment;
+    private TeamSummariesTeleopFragment teleopFragment;
     private TeamSummariesRawDataFragment rawDataFragment;
 
     public TeamSummariesFragmentPagerAdapter(FragmentManager fm) {
@@ -30,7 +32,8 @@ public class TeamSummariesFragmentPagerAdapter extends FragmentStatePagerAdapter
     private void initFragments() {
         dataFragment = new TeamSummariesDataFragment();
         rawDataFragment = new TeamSummariesRawDataFragment();
-        stackFragment = new TeamSummariesStackFragment();
+        autoFragment = new TeamSummariesAutoFragment();
+        teleopFragment = new TeamSummariesTeleopFragment();
         infoFragment = new TeamSummariesInfoFragment();
     }
 
@@ -42,8 +45,10 @@ public class TeamSummariesFragmentPagerAdapter extends FragmentStatePagerAdapter
             case 1:
                 return dataFragment;
             case 2:
-                return stackFragment;
+                return autoFragment;
             case 3:
+                return teleopFragment;
+            case 4:
                 return rawDataFragment;
             default:
                 return null;
@@ -66,10 +71,12 @@ public class TeamSummariesFragmentPagerAdapter extends FragmentStatePagerAdapter
             case 0:
                 return "General";
             case 1:
-                return "Data";
+                return "Stats";
             case 2:
-                return "Stacks";
+                return "Auto";
             case 3:
+                return "Teleop";
+            case 4:
                 return "Raw Data";
             default:
                 return "ERROR INVALID POSITION";
@@ -79,7 +86,8 @@ public class TeamSummariesFragmentPagerAdapter extends FragmentStatePagerAdapter
     public void acceptNewTeamData(String teamKey, Document teamDoc, Document pitDoc, List<Document> matchDocs) {
         infoFragment.acceptNewTeamData(teamKey, teamDoc, pitDoc, matchDocs);
         dataFragment.acceptNewTeamData(teamKey, teamDoc, pitDoc, matchDocs);
-        stackFragment.acceptNewTeamData(teamKey, teamDoc, pitDoc, matchDocs);
+        autoFragment.acceptNewTeamData(teamKey, teamDoc, pitDoc, matchDocs);
+        teleopFragment.acceptNewTeamData(teamKey, teamDoc, pitDoc, matchDocs);
         rawDataFragment.acceptNewTeamData(teamKey, teamDoc, pitDoc, matchDocs);
     }
 
